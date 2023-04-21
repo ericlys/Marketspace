@@ -1,5 +1,6 @@
 import { StatusBar, StyleSheet, Text, View } from 'react-native';
 import { useFonts, Karla_400Regular, Karla_700Bold } from '@expo-google-fonts/karla'
+import { NativeBaseProvider } from 'native-base';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -7,26 +8,15 @@ export default function App() {
     Karla_700Bold
   })
 
-  if (!fontsLoaded) {
-    return <Text>Loading ...</Text>;
-  }
-
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff' }}>
+    <NativeBaseProvider>
       <StatusBar 
         barStyle="dark-content"
         backgroundColor="transparent"
         translucent
-      />
-    </View>
+        />
+      {fontsLoaded ? <View/> : <View>Loading ...</View>}
+    </NativeBaseProvider>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

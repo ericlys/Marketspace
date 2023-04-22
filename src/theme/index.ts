@@ -22,6 +22,7 @@ export const THEME = extendTheme({
   fonts: {    
     heading: 'Karla_700Bold',
     body: 'Karla_400Regular',
+    extra: 'Karla_800ExtraBold',
   },
   fontSizes: {
     xs: 12,

@@ -1,4 +1,4 @@
-import { Input as NativeBaseInput, IInputProps, FormControl, HStack, Icon } from 'native-base'
+import { Input as NativeBaseInput, IInputProps, FormControl, HStack, Icon, Pressable } from 'native-base'
 import { Eye, EyeSlash } from 'phosphor-react-native'
 import { useState } from 'react';
 
@@ -47,12 +47,15 @@ export function Input({ errorMessage = null, isInvalid, secureTextEntry, ...rest
         />
 
         {secureTextEntry &&
-          <Icon 
-            as={ showPassword ? EyeSlash : Eye}
-            mr={2}
-            ml={1}
-            onPress={() => console.log( 'asdf')}
-          />
+          <Pressable
+          onPress={handleSwitchShowPassword}
+          >
+            <Icon 
+              as={ showPassword ? EyeSlash : Eye}
+              mr={4}
+              ml={2}
+            />
+          </Pressable>
         }
       </HStack>
       <FormControl.ErrorMessage _text={{color: "red.500"}}>

@@ -29,7 +29,6 @@ export function SignIn() {
           seu espaço de compra e venda
         </Text>
 
-
         <Center w="full">
         <Text 
           fontFamily="body"

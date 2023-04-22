@@ -7,7 +7,7 @@ import { Button } from "@components/Button";
 export function SignIn() {
   return (
     <VStack flex={1} bg="gray.100">
-      <Center flex={1} bg="gray.200" px={12}>
+      <Center flex={1} bg="gray.200" px={12} borderBottomRadius="3xl">
         <Image 
           source={LogoPng} 
           alt="Logo do app"
@@ -58,9 +58,16 @@ export function SignIn() {
       </Center>
 
 
-      {/* <VStack w="full" h={14} bg="gray.100">
+      <Center w="full" bg="gray.100" px={12} mb={16} mt="12">
+        <Text
+          color="gray.600"
+          fontSize="sm"
+        >
+          Ainda não tem acesso?
+        </Text>
 
-      </VStack> */}
+        <Button title="Criar uma conta" variant="tertiary" mt={4}/>
+      </Center>
     </VStack>
   )
 }

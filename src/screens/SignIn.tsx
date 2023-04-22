@@ -2,6 +2,7 @@ import { Center, Image, Text, VStack } from "native-base";
 import LogoPng from '@assets/logo.png';
 import AppName from '@assets/marketspace.png';
 import { Input } from "@components/Input";
+import { Button } from "@components/Button";
 
 export function SignIn() {
   return (
@@ -51,6 +52,8 @@ export function SignIn() {
             secureTextEntry={true}
             autoCapitalize="none"
           />
+
+          <Button title="Entrar" />
         </Center>
       </Center>
 

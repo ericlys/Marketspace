@@ -1,11 +1,12 @@
-import { Image, Text, VStack } from "native-base";
+import { Center, Image, Text, VStack } from "native-base";
 import LogoPng from '@assets/logo.png';
 import AppName from '@assets/marketspace.png';
+import { Input } from "@components/Input";
 
 export function SignIn() {
   return (
     <VStack flex={1} bg="gray.100">
-      <VStack flex={1} alignItems="center" justifyContent="center" bg="gray.200" px={12}>
+      <Center flex={1} bg="gray.200" px={12}>
         <Image 
           source={LogoPng} 
           alt="Logo do app"
@@ -27,7 +28,34 @@ export function SignIn() {
         >
           seu espaço de compra e venda
         </Text>
-      </VStack>
+
+
+        <Center w="full">
+        <Text 
+          fontFamily="body"
+          color="gray.600"
+          fontSize="sm"
+          mt={20}
+          mb={4}
+        >
+          Acesse sua conta
+        </Text>
+
+          <Input 
+            placeholder="E-mail"
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+          <Input 
+            placeholder="Senha"
+            type="password"
+            secureTextEntry={true}
+            autoCapitalize="none"
+          />
+        </Center>
+      </Center>
+
+
       {/* <VStack w="full" h={14} bg="gray.100">
 
       </VStack> */}

@@ -1,9 +1,8 @@
-import { Box, Center, Heading, Icon, IconButton, Image, ScrollView, Text, VStack } from "native-base";
+import { Box, Center, Heading, IconButton, Image, ScrollView, Text, VStack } from "native-base";
 import { UserPhoto } from "@components/UserPhoto";
 import LogoPng from '@assets/logo.png';
 import userPhotoPng from '@assets/userPhotoDefault.png';
-import { PencilLine, PencilSimple, PencilSimpleLine } from "phosphor-react-native";
-import { Pressable } from "react-native";
+import { PencilSimpleLine } from "phosphor-react-native";
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
 

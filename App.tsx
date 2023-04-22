@@ -3,7 +3,7 @@ import { useFonts, Karla_400Regular, Karla_700Bold, Karla_800ExtraBold } from '@
 import { NativeBaseProvider } from 'native-base';
 import { Loading } from '@components/Loading';
 import { THEME } from './src/theme';
-import { SignUp } from '@screens/SignUp';
+import { Home } from '@screens/Home';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -19,7 +19,7 @@ export default function App() {
         backgroundColor="transparent"
         translucent
         />
-      {fontsLoaded ? <SignUp/> : <Loading/>}
+      {fontsLoaded ? <Home /> : <Loading/>}
     </NativeBaseProvider>
   );
 }

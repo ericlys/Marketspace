@@ -6,7 +6,7 @@ type Props = IInputProps & {
   errorMessage?: string | null;
 }
 
-export function Input({ errorMessage = null, isInvalid, secureTextEntry, ...rest}: Props) {
+export function Input({ errorMessage = null, mb, mt, isInvalid, secureTextEntry, ...rest}: Props) {
   const [showPassword, setShowPassword] = useState(false)
   const invalid = !!errorMessage || isInvalid;
 
@@ -15,7 +15,7 @@ export function Input({ errorMessage = null, isInvalid, secureTextEntry, ...rest
   }
 
   return (
-    <FormControl isInvalid={invalid} mb={4}>
+    <FormControl isInvalid={invalid} mt={mt} mb={mb ?? 4}>
       <HStack
         alignItems="center"
         bg="gray.100"

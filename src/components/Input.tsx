@@ -30,7 +30,7 @@ export function Input({ errorMessage = null, mb, mt, isInvalid, secureTextEntry,
           fontFamily="body"
           placeholderTextColor="gray.400"
           isInvalid={invalid}
-          secureTextEntry={!showPassword}
+          secureTextEntry={secureTextEntry && !showPassword}
           _invalid={{
             borderWidth: 1,
             borderColor: 'red.500'

@@ -20,7 +20,7 @@ export function Card({ condition, active=true, ...rest}: Props) {
       <VStack
         style={{
           transform: [{
-            scale: isPressed ? 0.96 : 1
+            scale: isPressed && active ? 0.96 : 1
           }]
         }}
       >

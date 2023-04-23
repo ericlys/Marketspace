@@ -1,9 +1,10 @@
 import { Button } from "@components/Button";
+import { Card } from "@components/Card";
 import { SearchBar } from "@components/SearchBar";
 import { UserPhoto } from "@components/UserPhoto";
-import { Box, HStack, ScrollView, Text, VStack, useTheme } from "native-base";
+import { Box, Center, HStack, ScrollView, Text, VStack, useTheme } from "native-base";
 import { ArrowRight, Tag } from "phosphor-react-native";
-import { Pressable } from "react-native";
+import { TouchableOpacity } from "react-native";
 
 export function Home(){
   const theme = useTheme()
@@ -70,7 +71,7 @@ export function Home(){
                   4
                 </Text>
                 <Text
-                  fontSize="xs"
+                  fontSize="s"
                   color="gray.600"
                 >
                   anúncios ativos
@@ -78,12 +79,13 @@ export function Home(){
               </VStack>
             </HStack>
             
-            <Pressable              
+            <TouchableOpacity     
+              onPress={() => {}}         
             >
               <HStack alignItems="center">
                 <Text
                   fontFamily="heading"
-                  fontSize="xs"
+                  fontSize="s"
                   color="blue.500"
                   mr="2"
                 >
@@ -91,7 +93,7 @@ export function Home(){
                 </Text>
                 <ArrowRight size={16} color={theme.colors.blue[500]}/>
               </HStack>
-            </Pressable>
+            </TouchableOpacity>
 
           </HStack>
         </Box>
@@ -108,6 +110,10 @@ export function Home(){
             placeholder="Buscar anúncio"
           />
         </VStack>
+
+        <Center mt="4">
+          <Card condition="new" maxW={153}/>
+        </Center>
 
       </VStack>
     </ScrollView>

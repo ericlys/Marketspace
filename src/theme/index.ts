@@ -25,7 +25,9 @@ export const THEME = extendTheme({
     extra: 'Karla_800ExtraBold',
   },
   fontSizes: {
-    xs: 12,
+    xxs: 10,
+    xs: 11,
+    s: 12,
     sm: 14,
     md: 16,
     lg: 20,

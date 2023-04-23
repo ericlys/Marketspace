@@ -16,6 +16,7 @@ export function SearchBar({mt=0, mb=0,...rest}: Props) {
     bg="gray.100"
     mt={mt}
     mb={mb}
+    borderRadius="md"
   >
     <NativeBaseInput
       flex={1}
@@ -32,6 +33,9 @@ export function SearchBar({mt=0, mb=0,...rest}: Props) {
       }}
       _focus={{
         bg: "gray.100",
+        borderRadius: "none",
+        borderTopLeftRadius: "md",
+        borderBottomLeftRadius: "md",
         borderWidth: 1,
         borderColor: "gray.500"
       }}
@@ -55,8 +59,8 @@ export function SearchBar({mt=0, mb=0,...rest}: Props) {
       }}/>
 
     <Box
-      h="full"
-      w="0.2"
+      h="0.5"
+      w="0.4"
       bg="gray.300"
       pt="6"
     />

@@ -19,6 +19,7 @@ export function Input({ errorMessage = null, mb, mt, isInvalid, secureTextEntry,
       <HStack
         alignItems="center"
         bg="gray.100"
+        borderRadius="md"
       >
         <NativeBaseInput
           flex={1}

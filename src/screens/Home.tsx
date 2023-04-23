@@ -103,6 +103,7 @@ export function Home(){
             Compre produtos variados
           </Text>
           <SearchBar 
+            mt="4"
             placeholder="Buscar anúncio"
           />
         </VStack>

@@ -45,7 +45,7 @@ export function Home(){
           />
         </HStack>
 
-        <Box mt="8">``
+        <Box mt="8">
           <Text color="gray.500" fontSize="sm">
             Seus produtos anunciados para venda
           </Text>
@@ -85,6 +85,7 @@ export function Home(){
                   fontFamily="heading"
                   fontSize="xs"
                   color="blue.500"
+                  mr="2"
                 >
                   Meus anúncios 
                 </Text>

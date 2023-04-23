@@ -30,8 +30,8 @@ export function Card({ condition, active=true, ...rest}: Props) {
               uri: "https://photos.enjoei.com.br/tenis-adidas-84859201/1200xN/czM6Ly9waG90b3MuZW5qb2VpLmNvbS5ici9wcm9kdWN0cy8yODkxOTUzOS8yN2JmYTFjN2E2ZjUzZmFiZGY3MDBhMmIzYzFlYWIxYS5qcGc"
             }} 
             alt="Imagem do produto"
-            w={153}
-            h={100}
+            w={170}
+            h={110}
             resizeMode="cover" 
             borderRadius="md"
             position="relative"

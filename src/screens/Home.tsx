@@ -2,17 +2,17 @@ import { Button } from "@components/Button";
 import { Card } from "@components/Card";
 import { SearchBar } from "@components/SearchBar";
 import { UserPhoto } from "@components/UserPhoto";
-import { Box, Center, HStack, ScrollView, Text, VStack, useTheme } from "native-base";
+import { Box, HStack, ScrollView, Text, VStack, useTheme } from "native-base";
 import { ArrowRight, Tag } from "phosphor-react-native";
-import { TouchableOpacity } from "react-native";
+import { FlatList, TouchableOpacity } from "react-native";
 
 export function Home(){
   const theme = useTheme()
 
   return (
-    <ScrollView 
-    contentContainerStyle={{flexGrow: 1}} 
-    showsVerticalScrollIndicator={false}>
+    <VStack 
+    flex={1}
+    >
       <VStack flex={1} bg="gray.200" p={6} pt="16">
         <HStack>
           <HStack flex={1}>
@@ -97,25 +97,39 @@ export function Home(){
 
           </HStack>
         </Box>
-      
-        <VStack mt="8">
-          <Text
-            color="gray.500"
-            fontSize="sm"
-          >
-            Compre produtos variados
-          </Text>
-          <SearchBar 
-            mt="4"
-            placeholder="Buscar anúncio"
-          />
-        </VStack>
 
-        <Center mt="4">
-          <Card condition="new" maxW={153}/>
-        </Center>
+        <Text
+          color="gray.500"
+          fontSize="sm"
+          mt="8"
+          mb="4"
+        >
+          Compre produtos variados
+        </Text>
+    
+        <FlatList
+          data={[1,2,3,4,5,6,7]}
+          keyExtractor={(item, index) => index.toString()}
+          numColumns={2}
+          ListHeaderComponent={() => (
+            <VStack>
+              <SearchBar 
+                placeholder="Buscar anúncio"
+              />
+            </VStack>
+          )}
+          renderItem={({item}) => (
+            <Card condition="new"/>
+          ) }
+          showsVerticalScrollIndicator={false}
+          columnWrapperStyle={{
+            justifyContent: 'space-between',
+            marginTop: 24,
+          }}
+          
+        />
 
       </VStack>
-    </ScrollView>
+    </VStack>
   )
 } 

@@ -1,5 +1,6 @@
 import { Pressable, IPressableProps, Box, Image, VStack, useTheme, Text } from "native-base";
 import { UserPhoto } from "./UserPhoto";
+import { useState } from "react";
 
 type Props = IPressableProps & {
   condition: 'new' | 'used' 
@@ -8,12 +9,21 @@ type Props = IPressableProps & {
 
 export function Card({ condition, active=true, ...rest}: Props) {
   const theme = useTheme()
+  const [isPressed, setIsPressed] = useState(false);
 
   return (
     <Pressable
-      {...rest}
+     onPressIn={() => setIsPressed(true)}
+     onPressOut={() => setIsPressed(false)}
+     {...rest}
     >
-      <VStack>
+      <VStack
+        style={{
+          transform: [{
+            scale: isPressed ? 0.96 : 1
+          }]
+        }}
+      >
         <Box>
           <Image 
             source={{
@@ -49,6 +59,7 @@ export function Card({ condition, active=true, ...rest}: Props) {
             position="absolute"
             top="1"
             right="1"
+            textTransform="uppercase"
           >
               {condition === "new" ? "NOVO" : "USADO"}
           </Text>
@@ -70,6 +81,7 @@ export function Card({ condition, active=true, ...rest}: Props) {
               mt="auto"
               mb="2"
               ml="2"
+              textTransform="uppercase"
             >
               ANÚNCIO DESATIVADO
             </Text>

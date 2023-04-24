@@ -14,7 +14,7 @@ export function Header({onBack, title, rightIcon, ...rest}: Props) {
     <HStack 
       w="full"
       px={6}
-      pb={3}
+      pb={1}
       pt={16}//8
       bg="gray.100"
       alignItems="center"

@@ -5,9 +5,15 @@ type Props = IButtonProps & {
   title: string
   variant?: 'primary' | 'secondary' | 'tertiary'
   icon?: keyof typeof PhosphorIcon
+  iconWeight?: 'regular' | 'fill'
 }
 
-export function Button({title, variant="secondary", icon, ...rest}: Props){
+export function Button({
+  title,
+  variant="secondary",
+  icon, 
+  iconWeight='regular',
+   ...rest}: Props){
   const theme = useTheme()
   const colors = {
     primary: theme.colors.gray[700],
@@ -31,6 +37,7 @@ export function Button({title, variant="secondary", icon, ...rest}: Props){
       
       leftIcon={ icon ? 
         <Icon
+          weight={iconWeight}
           color={ variant === "tertiary" ? theme.colors.gray[700] : theme.colors.gray[100]}
           size={16}
         />

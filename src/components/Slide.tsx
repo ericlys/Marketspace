@@ -1,18 +1,18 @@
-import { Box, HStack, Image } from 'native-base'
+import { Box, HStack, IBoxProps, Image } from 'native-base'
 import { useState } from 'react';
 import { Dimensions } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel'
 
-type Props = {
+type Props = IBoxProps & {
   images: string[],
 }
 
-export function Slide({images}: Props) {
+export function Slide({images, ...rest}: Props) {
   const width = Dimensions.get('window').width;
   const [itemSnapped, setItemSnapped] = useState(0)
 
   return(
-    <Box>
+    <Box {...rest}>
       <Carousel
         data={images}
         width={width * 1.001}

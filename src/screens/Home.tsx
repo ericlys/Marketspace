@@ -2,9 +2,9 @@ import { Button } from "@components/Button";
 import { Card } from "@components/Card";
 import { SearchBar } from "@components/SearchBar";
 import { UserPhoto } from "@components/UserPhoto";
-import { Box, HStack, ScrollView, Text, VStack, useTheme } from "native-base";
+import { Box, FlatList, HStack, Text, VStack, useTheme } from "native-base";
 import { ArrowRight, Tag } from "phosphor-react-native";
-import { FlatList, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
 
 export function Home(){
   const theme = useTheme()
@@ -106,25 +106,24 @@ export function Home(){
         >
           Compre produtos variados
         </Text>
+
+        <VStack mb={4}>
+          <SearchBar 
+            placeholder="Buscar anúncio"
+          />
+        </VStack>
     
         <FlatList
           data={[1,2,3,4,5,6,7]}
           keyExtractor={(item, index) => index.toString()}
           numColumns={2}
-          ListHeaderComponent={() => (
-            <VStack>
-              <SearchBar 
-                placeholder="Buscar anúncio"
-              />
-            </VStack>
-          )}
           renderItem={({item}) => (
             <Card condition="new"/>
           ) }
           showsVerticalScrollIndicator={false}
           columnWrapperStyle={{
             justifyContent: 'space-between',
-            marginTop: 24,
+            marginBottom: 24
           }}
           
         />

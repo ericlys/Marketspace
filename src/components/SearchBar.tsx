@@ -1,5 +1,5 @@
 import { Box, HStack, IInputProps, IconButton, Input as NativeBaseInput, useTheme } from "native-base";
-import { MagnifyingGlass, PencilSimpleLine, Sliders } from "phosphor-react-native";
+import { MagnifyingGlass, Sliders } from "phosphor-react-native";
 
 
 type Props = IInputProps & {

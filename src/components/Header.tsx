@@ -34,7 +34,7 @@ export function Header({onBack, title, rightIcon, ...rest}: Props) {
         }
         rounded="full"
         _pressed={{
-          bg: 'gray.200'
+          bg: 'gray.300'
         }}
       />
     ): <Box w="8"/>}

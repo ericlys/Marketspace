@@ -4,9 +4,8 @@ import { useFonts, Karla_400Regular, Karla_700Bold, Karla_800ExtraBold } from '@
 import { NativeBaseProvider } from 'native-base';
 import { Loading } from '@components/Loading';
 import { THEME } from './src/theme';
-import { UserAds } from '@screens/UserAds';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { Home } from '@screens/Home';
+import { CreateAd } from '@screens/CreateAd';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -23,7 +22,7 @@ export default function App() {
         translucent
         />
         <GestureHandlerRootView style={{ flex: 1 }}>
-          {fontsLoaded ? <Home /> : <Loading/>}
+          {fontsLoaded ? <CreateAd /> : <Loading/>}
         </GestureHandlerRootView>
 
     </NativeBaseProvider>

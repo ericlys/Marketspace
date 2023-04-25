@@ -53,7 +53,6 @@ export function UserAds() {
         </HStack>
 
         <FlatList
-          // h="16"
           data={[1,2,3,4,5,6,7,8,45, 45123,425]}
           keyExtractor={(item, index) => index.toString()}
           numColumns={2}

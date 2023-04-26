@@ -2,7 +2,7 @@ import { Switch as NativeBaseInputSwitch, ISwitchProps, HStack, Box, View } from
 
 type Props = ISwitchProps & {}
 
-export function Switch({value=false, onValueChange, ...rest}: Props) {
+export function Switch({value=false, mt, onValueChange, ...rest}: Props) {
   return (
       <View 
         bg={value ? "blue.400" : "gray.300"} 
@@ -12,6 +12,7 @@ export function Switch({value=false, onValueChange, ...rest}: Props) {
         pr={'0.5'}
         justifyContent="center"
         alignItems="center"
+        mt={mt}
       >
       <NativeBaseInputSwitch
         size="lg"

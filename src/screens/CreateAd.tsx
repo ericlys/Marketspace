@@ -1,3 +1,5 @@
+import { Button } from "@components/Button";
+import { Checkbox, Group } from "@components/CheckBox";
 import { Header } from "@components/Header";
 import { Input } from "@components/Input";
 import { Radio } from "@components/Radio";
@@ -11,17 +13,28 @@ export function CreateAd() {
   const theme = useTheme()
   const [productState, setProductState] = useState('new')
   const [isExchangeable, setIsExchangeable] = useState(false)
+  const [checkGroup, setCheckGroup] = useState([])
+
+  const tradeMethods = [
+    {label: 'Boleto', value: 'bank_slip'},
+    {label: 'Pix', value: 'pix'},
+    {label: 'Dinheiro', value: 'cash'},
+    {label: 'Cartão de Crédito', value: 'credit_card'},
+    {label: 'Depósito Bancário', value: 'bank_deposit'}
+  ]
 
   return (
-    <ScrollView 
-      bg="gray.200" 
-      showsVerticalScrollIndicator={false}
-    >
+    <VStack flex={1}>
       <Header 
         bg="gray.200"
         onBack={() => {}}
         title="Criar anúncio"
       />
+    <ScrollView 
+      bg="gray.200" 
+      showsVerticalScrollIndicator={false}
+    >
+
 
       <VStack p={6}>
         <Text
@@ -94,9 +107,64 @@ export function CreateAd() {
           Aceita troca?
         </Text>
         
-        <Switch value={isExchangeable} onValueChange={setIsExchangeable}/>
+        <Switch 
+          mt={4}
+          isChecked={isExchangeable}
+          value={isExchangeable}
+          onToggle={() => setIsExchangeable(!isExchangeable)}
+        />
+
+        <Text
+          fontFamily="heading"
+          fontSize="md"
+          color="gray.600"
+          mt={4}
+        >
+          Meios de pagamento aceitos
+        </Text>
+        
+        <VStack mt="3">
+          <Group 
+            defaultValue={checkGroup} 
+            value={checkGroup} 
+            onChange={(values) => {
+              setCheckGroup(values || [])
+            }}
+            accessibilityLabel="pick an item"
+          >
+          { tradeMethods.map( method =>
+              <Checkbox 
+                key={method.value}
+                label={method.label}
+                value={method.value} 
+                mb={2}
+              />
+          )}
+          </Group>
+        </VStack>
 
       </VStack>
     </ScrollView>
+
+    <HStack 
+      bg="gray.100" 
+      py={25.5} px={6} 
+      alignItems="center" 
+      justifyContent="space-between"
+      space={3}
+    >
+      <Button
+        flex={1}
+        title="Cancelar"
+        variant="tertiary"
+      />
+
+      <Button
+        flex={1}
+        title="Avançar"
+        variant="primary"
+      />
+    </HStack>
+    </VStack>
   )
 }

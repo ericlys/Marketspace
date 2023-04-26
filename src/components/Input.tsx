@@ -1,17 +1,29 @@
-import { Input as NativeBaseInput, IInputProps, FormControl, HStack, Icon, Pressable } from 'native-base'
+import { Input as NativeBaseInput, IInputProps, FormControl, HStack, Icon, Pressable, Text } from 'native-base'
 import { Eye, EyeSlash } from 'phosphor-react-native'
 import { useState } from 'react';
 
 type Props = IInputProps & {
-  errorMessage?: string | null;
+  errorMessage?: string | null
+  prefix?: string | null
 }
 
-export function Input({ errorMessage = null, mb, mt, isInvalid, secureTextEntry, ...rest}: Props) {
+export function Input({ prefix = null, onBlur, onFocus, errorMessage = null, mb, mt, isInvalid, secureTextEntry, ...rest}: Props) {
   const [showPassword, setShowPassword] = useState(false)
+  const [focused, setFocused] = useState(false)
   const invalid = !!errorMessage || isInvalid;
 
   function handleSwitchShowPassword() {
     setShowPassword(!showPassword)
+  }
+
+  function handleFocus() {
+    setFocused(true)
+    onFocus
+  }
+
+  function handleBlue() {
+    setFocused(false)
+    onBlur
   }
 
   return (
@@ -20,11 +32,25 @@ export function Input({ errorMessage = null, mb, mt, isInvalid, secureTextEntry,
         alignItems="center"
         bg="gray.100"
         borderRadius="md"
+        borderWidth={focused ? 1 : 0}
+        borderColor={focused ? "gray.500" : ""}
       >
+        {prefix && 
+          <Text
+            fontFamily="body"
+            fontSize="md"
+            color="gray.700"
+            pl={4}
+            pr={2}
+          >
+            {prefix}
+          </Text>
+        }
+
         <NativeBaseInput
           flex={1}
           h={12}
-          px={4}
+          px={prefix ? 0 : 4}
           borderWidth={0}
           fontSize="md"
           color="gray.600"
@@ -36,10 +62,10 @@ export function Input({ errorMessage = null, mb, mt, isInvalid, secureTextEntry,
             borderWidth: 1,
             borderColor: 'red.500'
           }}
+          onFocus={handleFocus}
+          onBlur={handleBlue}
           _focus={{
-            bg: "gray.100",
-            borderWidth: 1,
-            borderColor: "gray.500"
+            bg: "gray.100"
           }}
           _disabled={{
             bg: "gray.300"

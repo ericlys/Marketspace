@@ -1,6 +1,7 @@
 import { Header } from "@components/Header";
 import { Input } from "@components/Input";
 import { Radio } from "@components/Radio";
+import { Switch } from "@components/Switch";
 import { TextArea } from "@components/TextArea";
 import { HStack, IconButton, ScrollView, Text, VStack, useTheme } from "native-base";
 import { Plus } from "phosphor-react-native";
@@ -9,6 +10,7 @@ import { useState } from "react";
 export function CreateAd() {
   const theme = useTheme()
   const [productState, setProductState] = useState('new')
+  const [isExchangeable, setIsExchangeable] = useState(false)
 
   return (
     <ScrollView 
@@ -68,6 +70,31 @@ export function CreateAd() {
           onChange={setProductState}
           options={[{label: "Produto novo", value: "new"}, {label: "Produto usado", value: "used"}]}
         />
+
+        <Text
+          fontFamily="heading"
+          fontSize="md"
+          color="gray.600"
+          mt={8}
+        >
+          Venda
+        </Text>
+
+        <Input
+          prefix={"R$"}
+          placeholder="Valor do produto"
+          mt={4}
+        />
+
+        <Text
+          fontFamily="heading"
+          fontSize="md"
+          color="gray.600"
+        >
+          Aceita troca?
+        </Text>
+        
+        <Switch value={isExchangeable} onValueChange={setIsExchangeable}/>
 
       </VStack>
     </ScrollView>

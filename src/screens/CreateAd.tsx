@@ -1,12 +1,14 @@
 import { Header } from "@components/Header";
 import { Input } from "@components/Input";
+import { Radio } from "@components/Radio";
 import { TextArea } from "@components/TextArea";
 import { HStack, IconButton, ScrollView, Text, VStack, useTheme } from "native-base";
-import sizes from "native-base/lib/typescript/theme/base/sizes";
 import { Plus } from "phosphor-react-native";
+import { useState } from "react";
 
 export function CreateAd() {
   const theme = useTheme()
+  const [productState, setProductState] = useState('new')
 
   return (
     <ScrollView 
@@ -59,7 +61,13 @@ export function CreateAd() {
 
         <TextArea placeholder="Descrição do produto" h={160}/>
 
-
+        <Radio 
+          name="Estado do produto" 
+          flexDir="row"
+          value={productState}
+          onChange={setProductState}
+          options={[{label: "Produto novo", value: "new"}, {label: "Produto usado", value: "used"}]}
+        />
 
       </VStack>
     </ScrollView>

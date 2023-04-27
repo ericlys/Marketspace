@@ -5,7 +5,7 @@ import { NativeBaseProvider } from 'native-base';
 import { Loading } from '@components/Loading';
 import { THEME } from './src/theme';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { CreateAd } from '@screens/CreateAd';
+import { AdDetails } from '@screens/Advertisement/AdDetails';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -22,7 +22,7 @@ export default function App() {
         translucent
         />
         <GestureHandlerRootView style={{ flex: 1 }}>
-          {fontsLoaded ? <CreateAd /> : <Loading/>}
+          {fontsLoaded ? <AdDetails /> : <Loading/>}
         </GestureHandlerRootView>
 
     </NativeBaseProvider>

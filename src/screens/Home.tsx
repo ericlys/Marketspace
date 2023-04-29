@@ -1,13 +1,26 @@
 import { Button } from "@components/Button";
 import { Card } from "@components/Card";
+import { Checkbox, Group } from "@components/CheckBox";
 import { SearchBar } from "@components/SearchBar";
+import { Switch } from "@components/Switch";
 import { UserPhoto } from "@components/UserPhoto";
-import { Box, FlatList, HStack, Text, VStack, useTheme } from "native-base";
+import BottomSheet from '@gorhom/bottom-sheet';
+import { Box, FlatList, HStack, Heading, Text, VStack, useTheme } from "native-base";
 import { ArrowRight, Tag } from "phosphor-react-native";
+import { useState } from "react";
 import { TouchableOpacity } from "react-native";
 
 export function Home(){
   const theme = useTheme()
+  const [checkGroup, setCheckGroup] = useState([])
+
+  const tradeMethods = [
+    {label: 'Boleto', value: 'bank_slip'},
+    {label: 'Pix', value: 'pix'},
+    {label: 'Dinheiro', value: 'cash'},
+    {label: 'Cartão de Crédito', value: 'credit_card'},
+    {label: 'Depósito Bancário', value: 'bank_deposit'}
+  ]
 
   return (
     <VStack 
@@ -125,9 +138,87 @@ export function Home(){
             justifyContent: 'space-between',
             marginBottom: 24
           }}
-          
         />
 
+        <BottomSheet
+          snapPoints={['65%', '75%']}
+          index={0}
+          onChange={() => console.log('oi')}
+          
+        >
+          <VStack flex={1} py={8} px={6}>
+            <Heading
+              fontFamily="heading"
+              fontSize="lg"  
+            >
+              Filtrar anúncios
+            </Heading>
+
+            <Text
+              mt={6}
+              fontFamily="heading"
+              fontSize="sm"  
+            >
+              Condição
+            </Text>
+            <Text
+              mt={6}
+              fontFamily="heading"
+              fontSize="sm"  
+            >
+              Aceita troca?
+            </Text>
+
+            <Switch mt={3}/>
+
+            <Text
+              mt={6}
+              fontFamily="heading"
+              fontSize="sm"  
+            >
+              Meios de pagamentos aceitos
+            </Text>
+
+            <Group
+              mt={3}
+              defaultValue={checkGroup} 
+              value={checkGroup} 
+              onChange={(values) => {
+                setCheckGroup(values || [])
+              }}
+              accessibilityLabel="pick an item"
+            >
+            { tradeMethods.map( method =>
+                <Checkbox 
+                  key={method.value}
+                  label={method.label}
+                  value={method.value} 
+                  mb={2}
+                />
+            )}
+            </Group>
+
+            <HStack 
+              mt={16}
+              alignItems="center" 
+              justifyContent="space-between"
+              space={3}
+            >
+              <Button
+                flex={1}
+                title="Resetar filtros"
+                variant="tertiary"
+              />
+
+              <Button
+                flex={1}
+                title="Aplicar filtros"
+                variant="primary"
+              />
+            </HStack>
+
+          </VStack>
+        </BottomSheet>
       </VStack>
     </VStack>
   )

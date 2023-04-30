@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { TouchableOpacity } from "react-native";
+import { useCallback, useRef, useState } from "react";
+import { Pressable, TouchableOpacity } from "react-native";
 
-import BottomSheet from '@gorhom/bottom-sheet';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { Box, FlatList, HStack, Heading, Text, VStack, useTheme } from "native-base";
-import { ArrowRight, Tag as TagIcon } from "phosphor-react-native";
+import { ArrowRight, Tag as TagIcon, X } from "phosphor-react-native";
 
 import { Button } from "@components/Button";
 import { Card } from "@components/Card";
@@ -16,6 +16,7 @@ import { Tag } from "@components/Tag";
 export function Home(){
   const theme = useTheme()
   const [checkGroup, setCheckGroup] = useState([])
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null)
 
   const tradeMethods = [
     {label: 'Boleto', value: 'bank_slip'},
@@ -24,6 +25,14 @@ export function Home(){
     {label: 'Cartão de Crédito', value: 'credit_card'},
     {label: 'Depósito Bancário', value: 'bank_deposit'}
   ]
+
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, [])
+
+  const handleCloseModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.close();
+  }, [])
 
   return (
     <VStack 
@@ -126,6 +135,7 @@ export function Home(){
         <VStack mb={4}>
           <SearchBar 
             placeholder="Buscar anúncio"
+            onFilter={handlePresentModalPress}
           />
         </VStack>
     
@@ -143,10 +153,12 @@ export function Home(){
           }}
         />
 
-        <BottomSheet
-          snapPoints={['65%', '75%']}
+        <BottomSheetModal
+          ref={bottomSheetModalRef}
+          snapPoints={['68%', '75%']}
           index={0}
           onChange={() => console.log('oi')}
+          enableDismissOnClose
           handleStyle={{    
             backgroundColor: theme.colors.gray[100],
             borderTopLeftRadius: 15,
@@ -158,12 +170,20 @@ export function Home(){
           }}
         >
           <VStack flex={1} py={8} px={6} bg="gray.100">
+            <HStack justifyContent="space-between">
             <Heading
               fontFamily="heading"
               fontSize="lg"  
             >
               Filtrar anúncios
             </Heading>
+
+            <Pressable
+              onPress={handleCloseModalPress}
+            >
+              <X size={24} color={theme.colors.gray[400]}/>
+            </Pressable>
+            </HStack>
 
             <Text
               mt={6}
@@ -235,7 +255,7 @@ export function Home(){
             </HStack>
 
           </VStack>
-        </BottomSheet>
+        </BottomSheetModal>
       </VStack>
     </VStack>
   )

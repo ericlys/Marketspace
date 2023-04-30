@@ -1,14 +1,17 @@
+import { useState } from "react";
+import { TouchableOpacity } from "react-native";
+
+import BottomSheet from '@gorhom/bottom-sheet';
+import { Box, FlatList, HStack, Heading, Text, VStack, useTheme } from "native-base";
+import { ArrowRight, Tag as TagIcon } from "phosphor-react-native";
+
 import { Button } from "@components/Button";
 import { Card } from "@components/Card";
 import { Checkbox, Group } from "@components/CheckBox";
 import { SearchBar } from "@components/SearchBar";
 import { Switch } from "@components/Switch";
 import { UserPhoto } from "@components/UserPhoto";
-import BottomSheet from '@gorhom/bottom-sheet';
-import { Box, FlatList, HStack, Heading, Text, VStack, useTheme } from "native-base";
-import { ArrowRight, Tag } from "phosphor-react-native";
-import { useState } from "react";
-import { TouchableOpacity } from "react-native";
+import { Tag } from "@components/Tag";
 
 export function Home(){
   const theme = useTheme()
@@ -75,7 +78,7 @@ export function Home(){
             justifyContent="space-between"
           >
             <HStack alignItems="center">
-              <Tag size={22} color={theme.colors.blue[500]}/>
+              <TagIcon size={22} color={theme.colors.blue[500]}/>
               <VStack ml={4}>
                 <Text
                   fontFamily="heading"
@@ -144,9 +147,17 @@ export function Home(){
           snapPoints={['65%', '75%']}
           index={0}
           onChange={() => console.log('oi')}
-          
+          handleStyle={{    
+            backgroundColor: theme.colors.gray[100],
+            borderTopLeftRadius: 15,
+            borderTopRightRadius: 15,
+          }}
+          handleIndicatorStyle={{
+            backgroundColor: theme.colors.gray[300],
+            width: 70
+          }}
         >
-          <VStack flex={1} py={8} px={6}>
+          <VStack flex={1} py={8} px={6} bg="gray.100">
             <Heading
               fontFamily="heading"
               fontSize="lg"  
@@ -161,6 +172,12 @@ export function Home(){
             >
               Condição
             </Text>
+
+            <HStack space={2} mt={3}>
+              <Tag title="Novo" active />
+              <Tag title="Usado" />
+            </HStack>
+
             <Text
               mt={6}
               fontFamily="heading"

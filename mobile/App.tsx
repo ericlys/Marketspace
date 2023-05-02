@@ -6,7 +6,6 @@ import { Loading } from '@components/Loading';
 import { THEME } from './src/theme';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Home } from '@screens/Home';
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -17,7 +16,6 @@ export default function App() {
 
   return (
     <NativeBaseProvider theme={THEME}>
-      <BottomSheetModalProvider>
       <StatusBar 
         barStyle="dark-content"
         backgroundColor="transparent"
@@ -26,7 +24,6 @@ export default function App() {
         <GestureHandlerRootView style={{ flex: 1 }}>
           {fontsLoaded ? <Home /> : <Loading/>}
         </GestureHandlerRootView>
-      </BottomSheetModalProvider>
     </NativeBaseProvider>
   );
 }

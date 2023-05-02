@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from "react";
 import { Pressable, TouchableOpacity } from "react-native";
 
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import  BottomSheet from '@gorhom/bottom-sheet';
 import { Box, FlatList, HStack, Heading, Text, VStack, useTheme } from "native-base";
 import { ArrowRight, Tag as TagIcon, X } from "phosphor-react-native";
 
@@ -16,7 +16,7 @@ import { Tag } from "@components/Tag";
 export function Home(){
   const theme = useTheme()
   const [checkGroup, setCheckGroup] = useState([])
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null)
+  const bottomSheetRef = useRef<BottomSheet>(null)
 
   const tradeMethods = [
     {label: 'Boleto', value: 'bank_slip'},
@@ -27,11 +27,11 @@ export function Home(){
   ]
 
   const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.present();
+    bottomSheetRef.current?.expand()
   }, [])
 
   const handleCloseModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.close();
+    bottomSheetRef.current?.close()
   }, [])
 
   return (
@@ -153,12 +153,11 @@ export function Home(){
           }}
         />
 
-        <BottomSheetModal
-          ref={bottomSheetModalRef}
-          snapPoints={['68%', '75%']}
+        <BottomSheet
+          ref={bottomSheetRef}
+          snapPoints={[1, '68%']}
           index={0}
-          onChange={() => console.log('oi')}
-          enableDismissOnClose
+          enablePanDownToClose
           handleStyle={{    
             backgroundColor: theme.colors.gray[100],
             borderTopLeftRadius: 15,
@@ -255,7 +254,7 @@ export function Home(){
             </HStack>
 
           </VStack>
-        </BottomSheetModal>
+        </BottomSheet>
       </VStack>
     </VStack>
   )

@@ -3,8 +3,18 @@ import LogoPng from '@assets/logo.png';
 import AppName from '@assets/marketspace.png';
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
+import { useNavigation } from "@react-navigation/native";
+import { AuthNavigatorRoutesProps } from "@routes/auth.routes";
 
 export function SignIn() {
+  const navigation = useNavigation<AuthNavigatorRoutesProps>();
+
+
+  function handleNewAccount() {
+    navigation.navigate('signUp')
+  }
+
+
   return (
     <VStack flex={1} bg="gray.100">
       <Center flex={1} bg="gray.200" px={12} borderBottomRadius="3xl">
@@ -66,7 +76,12 @@ export function SignIn() {
           Ainda não tem acesso?
         </Text>
 
-        <Button title="Criar uma conta" variant="tertiary" mt={4}/>
+        <Button 
+          title="Criar uma conta" 
+          variant="tertiary" 
+          mt={4}
+          onPress={handleNewAccount}
+        />
       </Center>
     </VStack>
   )

@@ -5,7 +5,7 @@ import { NativeBaseProvider } from 'native-base';
 import { Loading } from '@components/Loading';
 import { THEME } from './src/theme';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { Home } from '@screens/Home';
+import { Routes } from '@routes/index';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -22,7 +22,7 @@ export default function App() {
         translucent
         />
         <GestureHandlerRootView style={{ flex: 1 }}>
-          {fontsLoaded ? <Home /> : <Loading/>}
+          {fontsLoaded ? <Routes /> : <Loading/>}
         </GestureHandlerRootView>
     </NativeBaseProvider>
   );

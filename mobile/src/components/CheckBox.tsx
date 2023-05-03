@@ -1,4 +1,4 @@
-import { Checkbox as NativeBaseCheckbox, ICheckboxProps, ICheckboxGroupProps, Text } from "native-base"
+import { Checkbox as NativeBaseCheckbox, ICheckboxProps, ICheckboxGroupProps, Text, FormControl } from "native-base"
 import { LogBox } from 'react-native'
 
 LogBox.ignoreLogs([
@@ -9,9 +9,20 @@ type Props = ICheckboxProps & {
   label: string
 }
 
-export function Group({...rest} : ICheckboxGroupProps){
+type GroupProps = ICheckboxGroupProps & {
+  errorMessage?: string | null
+}
+
+export function Group({ mt, mb, errorMessage = null, ...rest} : GroupProps){
+  const invalid = !!errorMessage
+
   return (
-    <NativeBaseCheckbox.Group {...rest}/>
+    <FormControl isInvalid={invalid} mt={mt} mb={mb ?? 4}>
+      <NativeBaseCheckbox.Group {...rest}/>
+      <FormControl.ErrorMessage _text={{color: "red.500"}}>
+        {errorMessage}
+      </FormControl.ErrorMessage>
+    </FormControl>
   )
 }
 

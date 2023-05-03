@@ -1,84 +1,31 @@
-import { BottomTabNavigationProp, createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { IconButton, useTheme } from 'native-base'
-import { useAuth } from '@hooks/useAuth'
-import { Platform } from 'react-native';
-import { Home } from '@screens/Home';
-import { House, SignOut, Tag } from 'phosphor-react-native';
-import { UserAds } from '@screens/UserAds';
+import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { AppTabRoutes } from './appTab.routes'
+import { CreateAd } from '@screens/CreateAd'
+import { AdDetails } from '@screens/Advertisement/AdDetails'
+import { AdPreview } from '@screens/Advertisement/AdPreview'
 
-type AppRoutes = {
-  home: undefined;
-  userAds: undefined;
-  createAds: undefined;
-  adDetails: undefined;
-  adPreview: undefined;
-  logout: undefined;
+type AuthRoutes = {
+  appTabRoutes: undefined
+  createAds: undefined
+  adDetails: undefined
+  adPreview: undefined
 }
 
-export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutes>
+export type AppNavigatorRoutesProps =  NativeStackNavigationProp<AuthRoutes>
 
-const { Navigator, Screen } = createBottomTabNavigator<AppRoutes>()
-
-const LogoutComponent = () => {
-  return null
-}
+const { Navigator, Screen } = createNativeStackNavigator<AuthRoutes>()
 
 export function AppRoutes() {
-  const { sizes, colors } = useTheme()
-
-  const { signOut } = useAuth()
-
-  const iconSize = sizes[6]
-
   return (
-    <Navigator screenOptions={{
-      headerShown: false,
-      tabBarShowLabel: false,
-      tabBarActiveTintColor: colors.gray[600],
-      tabBarInactiveTintColor: colors.gray[400],
-      tabBarStyle: {
-        backgroundColor: colors.gray[100],
-        borderTopWidth: 0,
-        height: Platform.OS === 'android' ? 'auto' : 96,
-        paddingBottom: sizes[10],
-        paddingTop: sizes[6]
-      }
-    }}>
-      <Screen 
-        name="home" 
-        component={Home}
-        options={{
-          tabBarIcon: ({ color, focused }) => (
-            <House color={color} weight={focused ? 'bold' : 'regular'}  size={iconSize} />
-          )
-        }}
-      />
-      <Screen 
-        name="userAds" 
-        component={UserAds}
-        options={{
-          tabBarIcon: ({ color, focused }) => (
-            <Tag color={color} weight={focused ? 'bold' : 'regular'} size={iconSize} />
-          )
-        }}
-      />
-      <Screen 
-        name="logout" 
-        component={LogoutComponent}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <IconButton
-              onPress={signOut}
-              _pressed={{
-                bg: 'gray.100'
-              }}
-              icon={
-                <SignOut weight={focused ? 'bold' : 'regular'} color={colors.red[400]} size={iconSize} />
-              }
-            />
-          )
-        }}
-      />
+    <Navigator 
+      screenOptions={{
+        headerShown: false
+      }}
+    >
+      <Screen name='appTabRoutes' component={AppTabRoutes}/>
+      <Screen name='createAds' component={CreateAd}/>
+      <Screen name='adDetails' component={AdDetails}/>
+      <Screen name='adPreview' component={AdPreview}/>
     </Navigator>
   )
 }

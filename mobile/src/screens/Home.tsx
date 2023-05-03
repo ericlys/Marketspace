@@ -1,22 +1,35 @@
-import { useCallback, useRef, useState } from "react";
-import { Pressable, TouchableOpacity } from "react-native";
+import { useCallback, useRef, useState } from "react"
+import { Pressable, TouchableOpacity } from "react-native"
 
-import  BottomSheet from '@gorhom/bottom-sheet';
-import { Box, FlatList, HStack, Heading, Text, VStack, useTheme } from "native-base";
-import { ArrowRight, Tag as TagIcon, X } from "phosphor-react-native";
+import  { BottomSheetModal } from '@gorhom/bottom-sheet'
+import { Box, FlatList, HStack, Heading, Text, VStack, useTheme } from "native-base"
+import { ArrowRight, Tag as TagIcon, X } from "phosphor-react-native"
 
-import { Button } from "@components/Button";
-import { Card } from "@components/Card";
-import { Checkbox, Group } from "@components/CheckBox";
-import { SearchBar } from "@components/SearchBar";
-import { Switch } from "@components/Switch";
-import { UserPhoto } from "@components/UserPhoto";
-import { Tag } from "@components/Tag";
+import { Button } from "@components/Button"
+import { Card } from "@components/Card"
+import { Checkbox, Group } from "@components/CheckBox"
+import { SearchBar } from "@components/SearchBar"
+import { Switch } from "@components/Switch"
+import { UserPhoto } from "@components/UserPhoto"
+import { Tag } from "@components/Tag"
+
+import { useAuth } from "@hooks/useAuth"
+import { api } from "@services/api"
+import userPhotoPng from '@assets/userPhotoDefault.png'
+import { useNavigation } from "@react-navigation/native"
+import { AppNavigatorRoutesProps } from "@routes/app.routes"
 
 export function Home(){
   const theme = useTheme()
   const [checkGroup, setCheckGroup] = useState([])
-  const bottomSheetRef = useRef<BottomSheet>(null)
+  const bottomSheetRef = useRef<BottomSheetModal>(null)
+  const navigation = useNavigation<AppNavigatorRoutesProps>()
+
+  function handleOpenNewCreateAds() {
+    navigation.navigate("createAds")
+  }
+
+  const { user } = useAuth()
 
   const tradeMethods = [
     {label: 'Boleto', value: 'bank_slip'},
@@ -27,7 +40,7 @@ export function Home(){
   ]
 
   const handlePresentModalPress = useCallback(() => {
-    bottomSheetRef.current?.expand()
+    bottomSheetRef.current?.present()
   }, [])
 
   const handleCloseModalPress = useCallback(() => {
@@ -38,11 +51,16 @@ export function Home(){
     <VStack 
     flex={1}
     >
-      <VStack flex={1} bg="gray.200" p={6} pt="16">
+      <VStack flex={1} bg="gray.200" px={6} pt="16">
         <HStack>
           <HStack flex={1}>
             <UserPhoto 
-              src="https://avatars.githubusercontent.com/ericlys" 
+              source={
+              user.avatar ? 
+                { uri: `${api.getUri()}/images/${user.avatar}`}
+                :
+                userPhotoPng
+              }
               alt="Imagem do perfil do usuário"
               size={12}
               borderWidth={2}
@@ -58,7 +76,7 @@ export function Home(){
                 fontSize="md"
                 fontFamily="heading"
               >
-               Ericlys!
+               {user.name}!
               </Text>
             </VStack>
           </HStack>
@@ -68,6 +86,7 @@ export function Home(){
             icon="Plus"
             title="Criar anúncio"
             variant="primary"
+            onPress={handleOpenNewCreateAds}
           />
         </HStack>
 
@@ -153,12 +172,12 @@ export function Home(){
           }}
         />
 
-        <BottomSheet
+        <BottomSheetModal
           ref={bottomSheetRef}
-          snapPoints={[1, '68%']}
+          snapPoints={['68%']}
           index={0}
           enablePanDownToClose
-          handleStyle={{    
+          handleStyle={{     
             backgroundColor: theme.colors.gray[100],
             borderTopLeftRadius: 15,
             borderTopRightRadius: 15,
@@ -254,7 +273,7 @@ export function Home(){
             </HStack>
 
           </VStack>
-        </BottomSheet>
+        </BottomSheetModal>
       </VStack>
     </VStack>
   )

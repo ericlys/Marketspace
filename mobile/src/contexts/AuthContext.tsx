@@ -45,7 +45,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
 
     try {
       const { data } = await api.post('/sessions', { email, password })
-    
+
       if (data.user && data.token && data.refresh_token) {
         await storageUserAndTokenSave(data.user, data.token, data.refresh_token)
         userAndTokenUpdate(data.user, data.token)
@@ -62,7 +62,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
 
       const userLogged = await storageUserGet()
       const { token } = await storageAuthTokenGet()
-      
+
       if (token && userLogged) {
         userAndTokenUpdate(userLogged, token)
       }

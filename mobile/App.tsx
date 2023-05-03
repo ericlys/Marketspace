@@ -6,6 +6,7 @@ import { Loading } from '@components/Loading';
 import { THEME } from './src/theme';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Routes } from '@routes/index';
+import { AuthContextProvider } from '@contexts/AuthContext';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -22,7 +23,9 @@ export default function App() {
         translucent
         />
         <GestureHandlerRootView style={{ flex: 1 }}>
-          {fontsLoaded ? <Routes /> : <Loading/>}
+          <AuthContextProvider>
+            {fontsLoaded ? <Routes /> : <Loading/>}
+          </AuthContextProvider>
         </GestureHandlerRootView>
     </NativeBaseProvider>
   );

@@ -1,5 +1,5 @@
-const USER_STORAGE = '@ignitegym:user';
-const AUTH_TOKEN_STORAGE = '@ignitegym:token';
-const EXERCISE_STORAGE = '@ignitegym:storage';
+const USER_STORAGE = '@marketspace:user';
+const AUTH_TOKEN_STORAGE = '@marketspace:token';
+const EXERCISE_STORAGE = '@marketspace:storage';
 
 export { USER_STORAGE, AUTH_TOKEN_STORAGE, EXERCISE_STORAGE }

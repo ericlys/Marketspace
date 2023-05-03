@@ -32,8 +32,8 @@ export function Input({ prefix = null, onBlur, onFocus, errorMessage = null, mb,
         alignItems="center"
         bg="gray.100"
         borderRadius="md"
-        borderWidth={focused ? 1 : 0}
-        borderColor={focused ? "gray.500" : ""}
+        borderWidth={focused || invalid ? 1 : 0}
+        borderColor={focused ? "gray.500" : invalid ? "red.500" : ""}
       >
         {prefix && 
           <Text
@@ -58,10 +58,6 @@ export function Input({ prefix = null, onBlur, onFocus, errorMessage = null, mb,
           placeholderTextColor="gray.400"
           isInvalid={invalid}
           secureTextEntry={secureTextEntry && !showPassword}
-          _invalid={{
-            borderWidth: 1,
-            borderColor: 'red.500'
-          }}
           onFocus={handleFocus}
           onBlur={handleBlue}
           _focus={{

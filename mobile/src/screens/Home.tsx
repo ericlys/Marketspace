@@ -18,6 +18,7 @@ import { api } from "@services/api"
 import userPhotoPng from '@assets/userPhotoDefault.png'
 import { useNavigation } from "@react-navigation/native"
 import { AppNavigatorRoutesProps } from "@routes/app.routes"
+import { SafeAreaView } from "react-native-safe-area-context"
 
 export function Home(){
   const theme = useTheme()
@@ -48,10 +49,8 @@ export function Home(){
   }, [])
 
   return (
-    <VStack 
-    flex={1}
-    >
-      <VStack flex={1} bg="gray.200" px={6} pt="16">
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.gray[200] }} >
+      <VStack flex={1} bg="gray.200" px={6} pt="8">
         <HStack>
           <HStack flex={1}>
             <UserPhoto 
@@ -275,6 +274,6 @@ export function Home(){
           </VStack>
         </BottomSheetModal>
       </VStack>
-    </VStack>
+    </SafeAreaView>
   )
 } 

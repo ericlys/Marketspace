@@ -14,9 +14,11 @@ import { TextArea } from "@components/TextArea"
 import * as yup from 'yup'
 import { yupResolver } from "@hookform/resolvers/yup"
 import { Controller, useForm } from "react-hook-form"
-import { formatCurrency } from "@utils/formmaters"
+import { formatCurrency } from "@utils/formatters"
 import * as ImagePicker from "expo-image-picker"
 import * as FileSystem from 'expo-file-system'
+import { AppNavigatorRoutesProps } from "@routes/app.routes"
+import { SafeAreaView } from "react-native-safe-area-context"
 
 type FormDataProps = {
   name: string
@@ -47,9 +49,10 @@ const createAdSchema = yup.object({
 export function CreateAd() {
   const theme = useTheme()
   const toast = useToast()
-  const navigation = useNavigation()
+  const navigation = useNavigation<AppNavigatorRoutesProps>()
 
   const [productImages, setProductImages] = useState<string[]>([])
+  const [isLoading, setIsLoading] = useState(false)
 
   function handleGoBack() {
     navigation.goBack()
@@ -73,7 +76,6 @@ export function CreateAd() {
   })
 
   async function handleProductIMages(){
-    // setPhotoIsLoading(true)
 
     try {
       const selectedImages = await ImagePicker.launchImageLibraryAsync({
@@ -111,8 +113,6 @@ export function CreateAd() {
       
     } catch (error) {
       console.log(error)
-    } finally {
-      // setPhotoIsLoading(false)
     }
   }
 
@@ -122,14 +122,29 @@ export function CreateAd() {
     setProductImages(newListOfImages)
   }
 
-  function handleCreateAd(data: FormDataProps){
-    console.log(data)
+  function handleCreateAd( data: FormDataProps){
+    setIsLoading(true)
+    const product = {
+      name: data.name,
+      description: data.description,
+      is_new: data.is_new === 'new',
+      price: parseInt(data.price.replace(".", "").replace(",", ""), 10),
+      accept_trade: data.accept_trade,
+      payment_methods: data.payment_methods,
+      productImages
+    }
+
+
+    navigation.navigate("adPreview", { product })
+
+    setIsLoading(false)
   }
 
 
   return (
-    <VStack flex={1}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.gray[200] }} >
       <Header 
+        pt={4}
         bg="gray.200"
         onBack={handleGoBack}
         title="Criar anúncio"
@@ -158,9 +173,8 @@ export function CreateAd() {
         <HStack mt={4} space={2}>
 
           { productImages.map( (productImage, index) => (
-            <Box>
+            <Box key={index.toString()}>
               <Image 
-                key={index.toString()}
                 w={100}
                 h={100}
                 rounded="md"
@@ -350,9 +364,10 @@ export function CreateAd() {
         flex={1}
         title="Avançar"
         variant="primary"
+        isLoading={isLoading}
         onPress={handleSubmit(handleCreateAd)}
       />
     </HStack>
-    </VStack>
+    </SafeAreaView>
   )
 }

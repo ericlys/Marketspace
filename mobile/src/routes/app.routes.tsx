@@ -3,12 +3,15 @@ import { AppTabRoutes } from './appTab.routes'
 import { CreateAd } from '@screens/CreateAd'
 import { AdDetails } from '@screens/Advertisement/AdDetails'
 import { AdPreview } from '@screens/Advertisement/AdPreview'
+import { ProductDTO } from '@dtos/ProductDTO'
 
 type AuthRoutes = {
   appTabRoutes: undefined
   createAds: undefined
   adDetails: undefined
-  adPreview: undefined
+  adPreview: {
+    product: ProductDTO
+  }
 }
 
 export type AppNavigatorRoutesProps =  NativeStackNavigationProp<AuthRoutes>

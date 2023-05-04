@@ -15,7 +15,7 @@ export function Header({onBack, title, rightIcon, ...rest}: Props) {
       w="full"
       px={6}
       pb={1}
-      pt={16}//8
+      pt={8}
       bg="gray.100"
       alignItems="center"
       justifyContent="space-between"

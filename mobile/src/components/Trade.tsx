@@ -3,25 +3,25 @@ import { IHStackProps } from "native-base/lib/typescript/components/primitives/S
 import { Bank, Barcode, CreditCard, Money, QrCode } from "phosphor-react-native";
 
 type Props = IHStackProps & {
-  type: 'bank_slip' | 'pix' | 'cash' | 'credit_card' | 'bank_deposit' 
+  type: 'boleto' | 'pix' | 'cash' | 'card' | 'deposit' 
 }
 
 const icons = {
-  bank_slip: <Barcode size={24}
+  boleto: <Barcode size={24}
   weight="bold"
   />,
   pix: <QrCode size={18}/>,
   cash: <Money size={18}/>,
-  credit_card: <CreditCard size={18}/>,
-  bank_deposit: <Bank size={18}/>
+  card: <CreditCard size={18}/>,
+  deposit: <Bank size={18}/>
 }
 
 const tradeString = {
-  bank_slip: "Boleto",
+  boleto: "Boleto",
   pix: "Pix",
   cash: "Dinheiro",
-  credit_card: "Cartão de Credito",
-  bank_deposit: "Depósito Bancário"
+  card: "Cartão de Credito",
+  deposit: "Depósito Bancário"
 }
 
 export function Trade({type, ...rest}: Props){

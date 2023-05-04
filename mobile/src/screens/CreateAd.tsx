@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useNavigation } from "@react-navigation/native"
-import { HStack, IconButton, ScrollView, Text, VStack, useTheme } from "native-base"
-import { Plus } from "phosphor-react-native"
+import { Box, HStack, IconButton, Image, ScrollView, Text, VStack, useTheme, useToast } from "native-base"
+import { Plus, XCircle } from "phosphor-react-native"
 
 import { Button } from "@components/Button"
 import { Checkbox, Group } from "@components/CheckBox"
@@ -15,6 +15,8 @@ import * as yup from 'yup'
 import { yupResolver } from "@hookform/resolvers/yup"
 import { Controller, useForm } from "react-hook-form"
 import { formatCurrency } from "@utils/formmaters"
+import * as ImagePicker from "expo-image-picker"
+import * as FileSystem from 'expo-file-system'
 
 type FormDataProps = {
   name: string
@@ -44,7 +46,10 @@ const createAdSchema = yup.object({
 
 export function CreateAd() {
   const theme = useTheme()
+  const toast = useToast()
   const navigation = useNavigation()
+
+  const [productImages, setProductImages] = useState<string[]>([])
 
   function handleGoBack() {
     navigation.goBack()
@@ -66,6 +71,56 @@ export function CreateAd() {
       payment_methods: []
     }
   })
+
+  async function handleProductIMages(){
+    // setPhotoIsLoading(true)
+
+    try {
+      const selectedImages = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        quality: 1,
+        allowsMultipleSelection: productImages.length < 2,
+        selectionLimit: 3 - productImages.length,
+        aspect: [4,4],
+        base64: false
+      })
+      
+      if(selectedImages.canceled) {
+        return
+      }
+
+      const uris = await Promise.all(selectedImages.assets.map( 
+        async photo => {
+        const photoInfo = await FileSystem.getInfoAsync(photo.uri)
+
+        if(photoInfo.exists && (photoInfo.size / 1024 / 1024) > 5){
+          return toast.show({
+            title: "Imagem muito grande. Escolha uma de até 5MB.",
+            placement: 'top',
+            bgColor: 'red.500'
+          })     
+         
+        } else {
+          return photo.uri
+        }
+      }))
+
+      const photosAccepted = uris.slice(0,3 - productImages.length)
+
+      setProductImages([...productImages, ...photosAccepted])
+      
+    } catch (error) {
+      console.log(error)
+    } finally {
+      // setPhotoIsLoading(false)
+    }
+  }
+
+  function handleRemoveProductImage(index: number) {
+    const newListOfImages = [...productImages]
+    newListOfImages.splice(index, 1)
+    setProductImages(newListOfImages)
+  }
 
   function handleCreateAd(data: FormDataProps){
     console.log(data)
@@ -100,15 +155,48 @@ export function CreateAd() {
           Escolha até 3 imagens para mostrar o quando o seu produto é incrível!
         </Text>
 
-        <HStack mt={4}>
-          <IconButton
-            icon={
-              <Plus color={theme.colors.gray[400]} size={24}/>
-            }
-            bg="gray.300"
-            p={38}
-            borderRadius={6}
-          />
+        <HStack mt={4} space={2}>
+
+          { productImages.map( (productImage, index) => (
+            <Box>
+              <Image 
+                key={index.toString()}
+                w={100}
+                h={100}
+                rounded="md"
+                source={{ 
+                  uri: productImage
+                }}
+                alt=""
+              />
+
+              <IconButton
+                onPress={() => handleRemoveProductImage(index)}
+                icon={
+                  <XCircle color={theme.colors.gray[700]} weight="fill" size={16}/>
+                }
+                bg="gray.100"
+                position="absolute"
+                size={3}
+                rounded="full"
+                top="1"
+                right="1"
+              />
+            </Box>
+
+          ))}
+
+          { productImages.length < 3 && (
+            <IconButton
+              onPress={handleProductIMages}
+              icon={
+                <Plus color={theme.colors.gray[400]} size={24}/>
+              }
+              bg="gray.300"
+              p={38}
+              borderRadius={6}
+            />
+          )}
         </HStack>
 
         <Text

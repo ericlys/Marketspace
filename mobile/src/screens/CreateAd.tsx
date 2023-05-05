@@ -358,6 +358,7 @@ export function CreateAd() {
         flex={1}
         title="Cancelar"
         variant="tertiary"
+        onPress={handleGoBack}
       />
 
       <Button

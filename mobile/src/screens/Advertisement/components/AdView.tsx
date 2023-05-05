@@ -18,7 +18,7 @@ type Props = {
   }
 }
 
-export function AdView({product, user, isMy=true, isActive=true}: Props) {
+export function AdView({product, user, isMy=false, isActive=true}: Props) {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -120,20 +120,20 @@ export function AdView({product, user, isMy=true, isActive=true}: Props) {
           }
         </Box>
 
-      {isMy &&    
-        <VStack mt={8} space={2}>
-          <Button
-            title={isActive ? "Reativar anúncio" :"Desativar anúncio"}
-            icon="Power"
-            variant={isActive ? "secondary" : "primary"}
-          />
-          <Button
-            title="Excluir anúncio"
-            icon="Trash"
-            variant="tertiary"
-          />
-        </VStack>
-      }
+        {isMy &&    
+          <VStack mt={8} space={2}>
+            <Button
+              title={isActive ? "Desativar anúncio" : "Reativar anúncio"}
+              icon="Power"
+              variant={isActive ? "primary" : "secondary"}
+            />
+            <Button
+              title="Excluir anúncio"
+              icon="Trash"
+              variant="tertiary"
+            />
+          </VStack>
+        }
 
       </VStack>
     </ScrollView>

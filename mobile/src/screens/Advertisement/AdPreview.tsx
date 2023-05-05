@@ -1,10 +1,14 @@
 import { Button } from "@components/Button";
-import { Center, HStack, Heading, Text, VStack, useTheme } from "native-base";
+import { Box, Center, HStack, Heading, Modal, Progress, Text, VStack, useTheme, useToast } from "native-base";
 import { AdView } from "./components/AdView";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { ProductDTO } from "@dtos/ProductDTO";
 import { useAuth } from "@hooks/useAuth";
+import { useState } from "react";
+import { api } from "@services/api";
+import { AppError } from "@utils/AppError";
+import { AppNavigatorRoutesProps } from "@routes/app.routes";
 
 type RouteParamsProps = {
   product: ProductDTO
@@ -12,7 +16,11 @@ type RouteParamsProps = {
 
 export function AdPreview() {
   const {colors} = useTheme()
-  const navigation = useNavigation()
+  const navigation = useNavigation<AppNavigatorRoutesProps>()
+
+  const [isLoading, setIsLoading] = useState(false)
+  const [uploadPercentage, setUploadPercentage] = useState(0)
+  const toast = useToast()
 
   const route = useRoute()
   const { product } = route.params as RouteParamsProps
@@ -21,6 +29,67 @@ export function AdPreview() {
 
   function handleGoBack() {
     navigation.goBack()
+  }
+
+  async function handlePublish() {
+    setIsLoading(true)
+    try {
+      const response = await api.post('/products', product)
+
+      const { id } = response.data
+
+      const registerProductForm = new FormData()
+      registerProductForm.append('product_id', id)
+
+      product.productImages.map((image, index) => {
+        const fileExtension = image.split('.').pop()
+
+        const imageObject = {
+          name: `${product.name}.${fileExtension}`.toLowerCase().replace(/\s/g,''),
+          uri: image,
+          type: `image/${fileExtension}`
+        } as any
+
+        registerProductForm.append('images', imageObject)
+      })
+
+            
+      await api.post('/products/images', registerProductForm, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+        onUploadProgress: progressEvent => {
+          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total!)
+          setUploadPercentage(percentCompleted)
+        },
+      })
+
+      setUploadPercentage(0)
+
+      toast.show({
+        title: 'Produto Publicado com sucesso.',
+        placement: 'top',
+        bgColor: 'blue.500'
+      })
+
+      navigation.navigate("appTabRoutes")
+
+    } catch (error) {    
+      setUploadPercentage(0)
+
+      const isAppError = error instanceof AppError
+      const title = isAppError ? error.message : 'Não foi possível criar a conta. Tente novamente mais tarde.'
+
+      if(isAppError) {
+        toast.show({
+          title,
+          placement: 'top',
+          bgColor: 'red.500'
+        })
+      }
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -46,9 +115,7 @@ export function AdPreview() {
 
         <AdView
          user={user}
-         product={product} 
-         isMy
-         isActive
+         product={product}
         />
 
         <HStack 
@@ -70,9 +137,23 @@ export function AdPreview() {
             flex={1}
             icon="Tag"
             title="Publicar"
+            onPress={handlePublish}
+            isLoading={isLoading}
           />
         </HStack>
       </VStack>
+      <Modal isOpen={uploadPercentage > 0}>
+        <Modal.Content>
+          <Modal.Body bg="gray.200">
+            <Center>
+              <Heading> {uploadPercentage}% </Heading>
+              <Box w="100%" maxW="400" mt={4}>
+                <Progress value={uploadPercentage} mx="4" colorScheme={"darkBlue"} bg="gray.400"/>
+              </Box>
+            </Center>
+          </Modal.Body>
+        </Modal.Content>
+      </Modal>
     </SafeAreaView>
   )
 }

@@ -41,12 +41,12 @@ export function AdPreview() {
       const registerProductForm = new FormData()
       registerProductForm.append('product_id', id)
 
-      product.productImages.map((image, index) => {
-        const fileExtension = image.split('.').pop()
+      product.product_images.map((image, index) => {
+        const fileExtension = image.path.split('.').pop()
 
         const imageObject = {
           name: `${product.name}.${fileExtension}`.toLowerCase().replace(/\s/g,''),
-          uri: image,
+          uri: image.path,
           type: `image/${fileExtension}`
         } as any
 

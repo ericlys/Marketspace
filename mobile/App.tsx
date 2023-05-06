@@ -8,6 +8,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Routes } from '@routes/index'
 import { AuthContextProvider } from '@contexts/AuthContext'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
+import { QueryClientProvider } from '@tanstack/react-query'
+import { queryClient } from './src/lib/ReactQuery'
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -18,6 +20,7 @@ export default function App() {
 
   return (
     <NativeBaseProvider theme={THEME}>
+      <QueryClientProvider client={queryClient}>
       <StatusBar 
         barStyle="dark-content"
         backgroundColor="transparent"
@@ -30,6 +33,7 @@ export default function App() {
             </AuthContextProvider>
           </BottomSheetModalProvider>
         </GestureHandlerRootView>
+      </QueryClientProvider>
     </NativeBaseProvider>
   )
 }

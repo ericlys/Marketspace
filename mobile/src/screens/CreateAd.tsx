@@ -51,7 +51,7 @@ export function CreateAd() {
   const toast = useToast()
   const navigation = useNavigation<AppNavigatorRoutesProps>()
 
-  const [productImages, setProductImages] = useState<string[]>([])
+  const [productImages, setProductImages] = useState<{path: string}[]>([])
   const [isLoading, setIsLoading] = useState(false)
 
   function handleGoBack() {
@@ -109,7 +109,11 @@ export function CreateAd() {
 
       const photosAccepted = uris.slice(0,3 - productImages.length)
 
-      setProductImages([...productImages, ...photosAccepted])
+      const photosPathFormatted = photosAccepted.map( photo => {
+        return{path: photo}}
+      )
+
+      setProductImages([...productImages, ...photosPathFormatted])
       
     } catch (error) {
       console.log(error)
@@ -124,6 +128,17 @@ export function CreateAd() {
 
   function handleCreateAd( data: FormDataProps){
     setIsLoading(true)
+
+    if(productImages.length < 1) {
+      setIsLoading(false)
+     
+      return toast.show({
+        title: "É necessário inserir imagem no anúncio.",
+        placement: 'top',
+        bgColor: 'red.500'
+      })     
+    }
+
     const product = {
       name: data.name,
       description: data.description,
@@ -131,7 +146,7 @@ export function CreateAd() {
       price: parseInt(data.price.replace(".", "").replace(",", ""), 10),
       accept_trade: data.accept_trade,
       payment_methods: data.payment_methods as Array<'boleto' | 'pix' | 'cash' | 'card' | 'deposit'>,
-      productImages
+      product_images: productImages
     }
 
 
@@ -179,7 +194,7 @@ export function CreateAd() {
                 h={100}
                 rounded="md"
                 source={{ 
-                  uri: productImage
+                  uri: productImage.path
                 }}
                 alt=""
               />

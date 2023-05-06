@@ -1,23 +1,77 @@
-import { Card } from "@components/Card";
-import { Header } from "@components/Header";
-import { Select } from "@components/Select";
-import { FlatList, HStack, IconButton, Text, VStack, useTheme } from "native-base";
-import { Plus } from "phosphor-react-native";
-import { useState } from "react";
+import { Card } from "@components/Card"
+import { Header } from "@components/Header"
+import { Select } from "@components/Select"
+import { FlatList, HStack, IconButton, Text, VStack, useTheme, useToast } from "native-base"
+import { Plus } from "phosphor-react-native"
+import { useCallback, useEffect, useState } from "react"
+import {
+  useQuery
+} from '@tanstack/react-query'
+import { ProductDTO } from "@dtos/ProductDTO"
+import { api } from "@services/api"
+import { AppError } from "@utils/AppError"
+import { useFocusEffect } from "@react-navigation/native"
+import { queryClient } from "../lib/ReactQuery"
+import { RefreshControl } from "react-native-gesture-handler"
+import { useAuth } from "@hooks/useAuth"
 
 export function UserAds() {
   const theme = useTheme()
+  const toast = useToast()
+  const [filter, setFilter] = useState('all')
+  const [productsFormatted, setProductsFormatted] = useState<ProductDTO[]>([])
+
+  const { user } = useAuth()
+
+  const { data: products, isLoading } = useQuery<ProductDTO[]>(['myProducts'],
+    async () => {
+      try {
+        const response = await api.get('/users/products')
+        return response.data
+      } catch (error) {
+        const isAppError = error instanceof AppError
+        const title = isAppError ? error.message : 'Não foi possível carregar os produtos do usuário.'
+
+        toast.show({
+          title,
+          placement: 'top',
+          bgColor: 'red.500'
+        })
+
+        return []
+      }
+    }
+  )
+
+  const onRefresh = useCallback(() => {
+    queryClient.invalidateQueries(['myProducts'])
+  }, [])
+
+  useFocusEffect( useCallback( () => {
+    onRefresh()
+  },[]))
 
   const options = [
     {label: 'Todos', value: 'all'},
-    {label: 'Ativos', value: 'actives'},
-    {label: 'Inativos', value: 'inatives'}
+    {label: 'Ativos', value: 'active'},
+    {label: 'Inativos', value: 'inative'}
   ]
-  const [filter, setFilter] = useState('all')
+
+  useEffect(() => {
+    if (!products) {return}
+
+    let filteredProducts = products
+    if (filter !== 'all'){
+      filteredProducts = products?.filter(products => products.is_active === (filter === 'active'))
+    }
+
+    setProductsFormatted(filteredProducts)
+  }, [filter, products])
 
   return (
     <VStack flex={1} bg="gray.200">
       <Header
+        mt={4}
         bg="gray.200"
         title="Meus anúncios"
         rightIcon={
@@ -46,19 +100,20 @@ export function UserAds() {
             fontSize="sm"
             color="gray.600"
           >
-            9 anúncios
+            {products?.length} anúncios
           </Text>
 
           <Select options={options} value={filter} onSelect={setFilter}/>
         </HStack>
 
         <FlatList
-          data={[1,2,3,4,5,6,7,8,45, 45123,425]}
-          keyExtractor={(item, index) => index.toString()}
+          refreshControl={<RefreshControl refreshing={isLoading} onRefresh={onRefresh}/>}
+          data={productsFormatted}
+          keyExtractor={(item) => item.id!}
           numColumns={2}
          
           renderItem={({item}) => (
-            <Card condition="new"/>
+            <Card advertiser={user} product={item}/>
           ) }
           showsVerticalScrollIndicator={false}
           columnWrapperStyle={{

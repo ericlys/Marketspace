@@ -20,10 +20,12 @@ type Props = {
 
 export function AdView({product, user, isMy=false, isActive=true}: Props) {
 
+  const formattedImagesPaths = product.product_images.map( image => image.path)
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <Box>
-        <Slide images={product.productImages} position="relative"/>
+        <Slide images={formattedImagesPaths} position="relative"/>
         {
           !isActive &&
           <Center 
@@ -76,7 +78,7 @@ export function AdView({product, user, isMy=false, isActive=true}: Props) {
         </Text>
 
         <HStack mt={2.5} alignItems="center" justifyContent="space-between">
-          <Heading fontFamily="heading" fontSize="lg">
+          <Heading fontFamily="heading" fontSize="lg" maxW="75%">
             {product.name}
           </Heading>
 

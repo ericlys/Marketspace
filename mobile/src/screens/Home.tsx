@@ -157,7 +157,7 @@ export function Home(){
           />
         </VStack>
     
-        <FlatList
+        {/* <FlatList
           data={[1,2,3,4,5,6,7]}
           keyExtractor={(item, index) => index.toString()}
           numColumns={2}
@@ -169,7 +169,7 @@ export function Home(){
             justifyContent: 'space-between',
             marginBottom: 24
           }}
-        />
+        /> */}
 
         <BottomSheetModal
           ref={bottomSheetRef}

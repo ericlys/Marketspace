@@ -1,15 +1,19 @@
-import { Pressable, IPressableProps, Box, Image, VStack, useTheme, Text } from "native-base";
-import { UserPhoto } from "./UserPhoto";
-import { useState } from "react";
+import { Pressable, IPressableProps, Box, Image, VStack, useTheme, Text } from "native-base"
+import { UserPhoto } from "./UserPhoto"
+import { useState } from "react"
+import { ProductDTO } from "@dtos/ProductDTO"
+import { api } from "@services/api"
+import { formatCurrency } from "@utils/formatters"
+import { UserDTO } from "@dtos/UserDTO"
 
 type Props = IPressableProps & {
-  condition: 'new' | 'used' 
-  active?: boolean
+  product: ProductDTO
+  advertiser: UserDTO
 }
 
-export function Card({ condition, active=true, ...rest}: Props) {
+export function Card({ product, advertiser, ...rest}: Props) {
   const theme = useTheme()
-  const [isPressed, setIsPressed] = useState(false);
+  const [isPressed, setIsPressed] = useState(false)
 
   return (
     <Pressable
@@ -20,15 +24,15 @@ export function Card({ condition, active=true, ...rest}: Props) {
       <VStack
         style={{
           transform: [{
-            scale: isPressed && active ? 0.96 : 1
+            scale: isPressed && product.is_active ? 0.96 : 1
           }]
         }}
       >
         <Box>
           <Image 
-            source={{
-              uri: "https://photos.enjoei.com.br/tenis-adidas-84859201/1200xN/czM6Ly9waG90b3MuZW5qb2VpLmNvbS5ici9wcm9kdWN0cy8yODkxOTUzOS8yN2JmYTFjN2E2ZjUzZmFiZGY3MDBhMmIzYzFlYWIxYS5qcGc"
-            }} 
+            source={
+              { uri: `${api.getUri()}/images/${product.product_images[0].path}`}
+            }
             alt="Imagem do produto"
             w={170}
             h={110}
@@ -38,7 +42,7 @@ export function Card({ condition, active=true, ...rest}: Props) {
           />
 
           <UserPhoto 
-            src="https://avatars.githubusercontent.com/ericlys" 
+            src={`${api.getUri()}/images/${advertiser.avatar}`}
             alt="Imagem do perfil do vendedor"
             size={6}
             borderWidth={1}
@@ -49,7 +53,7 @@ export function Card({ condition, active=true, ...rest}: Props) {
           />
 
           <Text
-            bg={condition === "new" ? "blue.500" : "gray.600"}
+            bg={product.is_new ? "blue.500" : "gray.600"}
             color="gray.100"
             fontFamily="heading"
             py="0.5"
@@ -61,10 +65,10 @@ export function Card({ condition, active=true, ...rest}: Props) {
             right="1"
             textTransform="uppercase"
           >
-              {condition === "new" ? "NOVO" : "USADO"}
+              {product.is_new ? "NOVO" : "USADO"}
           </Text>
 
-          { !active && (
+          { !product.is_active && (
             <Box
             position="absolute"
             top="0"
@@ -93,17 +97,19 @@ export function Card({ condition, active=true, ...rest}: Props) {
 
         <Text 
           mt="1"
-          color={active ? "gray.600" : "gray.400"}
+          color={product.is_active ? "gray.600" : "gray.400"}
           fontSize="sm"
+          w={170}
+          numberOfLines={1}
           >
-          Tênis adidas branco
+          {product.name}
         </Text>
         <Text
-          color={active ? "gray.700" : "gray.400"}
+          color={product.is_active ? "gray.700" : "gray.400"}
           fontFamily="heading"
           fontSize="md"
         >
-          R$ 180,90
+          R$ {formatCurrency(product.price.toString())}
         </Text>
       </VStack>
     </Pressable>

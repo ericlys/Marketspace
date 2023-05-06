@@ -10,18 +10,25 @@ import {
 import { ProductDTO } from "@dtos/ProductDTO"
 import { api } from "@services/api"
 import { AppError } from "@utils/AppError"
-import { useFocusEffect } from "@react-navigation/native"
+import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import { queryClient } from "../lib/ReactQuery"
 import { RefreshControl } from "react-native-gesture-handler"
 import { useAuth } from "@hooks/useAuth"
+import { AppNavigatorRoutesProps } from "@routes/app.routes"
 
 export function UserAds() {
   const theme = useTheme()
   const toast = useToast()
   const [filter, setFilter] = useState('all')
   const [productsFormatted, setProductsFormatted] = useState<ProductDTO[]>([])
+  const navigation = useNavigation<AppNavigatorRoutesProps>()
 
   const { user } = useAuth()
+
+  function handleOpenNewCreateAds() {
+    navigation.navigate("createAds")
+  }
+
 
   const { data: products, isLoading } = useQuery<ProductDTO[]>(['myProducts'],
     async () => {
@@ -76,7 +83,7 @@ export function UserAds() {
         title="Meus anúncios"
         rightIcon={
           <IconButton
-            onPress={() =>  {}}
+            onPress={handleOpenNewCreateAds}
             icon={
               <Plus
                 size={24}
@@ -100,7 +107,7 @@ export function UserAds() {
             fontSize="sm"
             color="gray.600"
           >
-            {products?.length} anúncios
+            {productsFormatted?.length} {productsFormatted?.length !== 1 ? 'anúncios' : 'anuncio' }
           </Text>
 
           <Select options={options} value={filter} onSelect={setFilter}/>

@@ -28,6 +28,10 @@ export function UserAds() {
   function handleOpenNewCreateAds() {
     navigation.navigate("createAds")
   }
+  
+  function handleOpenAdDetails(id: string) {
+    navigation.navigate("adDetails", {id, isEditable: true})
+  }
 
 
   const { data: products, isLoading } = useQuery<ProductDTO[]>(['myProducts'],
@@ -118,9 +122,12 @@ export function UserAds() {
           data={productsFormatted}
           keyExtractor={(item) => item.id!}
           numColumns={2}
-         
           renderItem={({item}) => (
-            <Card advertiser={user} product={item}/>
+            <Card 
+              advertiser={user} 
+              product={item} 
+              onPress={() => handleOpenAdDetails(item.id!)}
+            />
           ) }
           showsVerticalScrollIndicator={false}
           columnWrapperStyle={{

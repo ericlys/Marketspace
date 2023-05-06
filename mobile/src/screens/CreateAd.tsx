@@ -146,7 +146,8 @@ export function CreateAd() {
       price: parseInt(data.price.replace(".", "").replace(",", ""), 10),
       accept_trade: data.accept_trade,
       payment_methods: data.payment_methods as Array<'boleto' | 'pix' | 'cash' | 'card' | 'deposit'>,
-      product_images: productImages
+      product_images: productImages,
+      is_active: true
     }
 
 

@@ -1,3 +1,5 @@
+import { UserDTO } from "./UserDTO"
+
 export type ProductDTO = {
   id?: string
   name: string 
@@ -11,4 +13,5 @@ export type ProductDTO = {
     path: string
     id?: string
   }[]
+  user?: UserDTO
 }

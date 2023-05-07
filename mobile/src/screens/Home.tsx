@@ -15,7 +15,7 @@ import { Tag } from "@components/Tag"
 import { useAuth } from "@hooks/useAuth"
 import { api } from "@services/api"
 import userPhotoPng from '@assets/userPhotoDefault.png'
-import { useNavigation } from "@react-navigation/native"
+import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import { AppNavigatorRoutesProps } from "@routes/app.routes"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { useQuery } from "@tanstack/react-query"
@@ -34,7 +34,7 @@ export function Home(){
   const tabNavigation = useNavigation<AppTabNavigatorRoutesProps>()
 
   const { user } = useAuth()
-  const { products } = useMyAds()
+  const { products, refetch: refetchAds } = useMyAds()
 
   const [filterIsNew, setFilterIsNew] = useState("")
   const [filterAcceptTrade, setFilterAcceptTrade] = useState(false)
@@ -122,6 +122,10 @@ export function Home(){
     refetch()
     handleCloseModalPress()
   }
+
+  useFocusEffect( useCallback( () => {
+    refetchAds()
+  },[]))
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.gray[200] }} >
@@ -266,7 +270,7 @@ export function Home(){
 
         <BottomSheetModal
           ref={bottomSheetRef}
-          snapPoints={['70%']}
+          snapPoints={[620]}
           index={0}
           enablePanDownToClose
           handleStyle={{     

@@ -37,6 +37,9 @@ export function MyAdsContextProvider({children}: MyAdsContextProviderProps) {
 
         return []
       }
+    },
+    {
+      enabled: false
     }
   )
 

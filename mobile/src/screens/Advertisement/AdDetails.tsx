@@ -11,6 +11,7 @@ import { ProductDTO } from "@dtos/ProductDTO";
 import { api } from "@services/api";
 import { AppError } from "@utils/AppError";
 import { Loading } from "@components/Loading";
+import { Linking } from "react-native";
 
 type RouteParamsProps = {
   id: string,
@@ -62,6 +63,13 @@ export function AdDetails() {
   useEffect(() => {
     fetchProductDetails()
   },[id])
+
+
+  function handleWhatsAppPress() {
+    const message = `Olá, o produto ${product.name} está disponível.`
+
+    Linking.openURL(`whatsapp://send?phone=${product.user?.tel}&text=${message}`)
+  }
 
 
   return (
@@ -121,6 +129,7 @@ export function AdDetails() {
           icon="WhatsappLogo"
           iconWeight="fill"
           title="Entrar em contato"
+          onPress={handleWhatsAppPress}
         />
         </HStack>
       }

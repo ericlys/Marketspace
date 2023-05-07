@@ -9,7 +9,7 @@ type AuthRoutes = {
   appTabRoutes: undefined
   createAds: {
     productEditable?: ProductDTO,
-  }
+  } | undefined
   adDetails: {
     id: string,
     isEditable?: boolean

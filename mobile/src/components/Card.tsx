@@ -24,7 +24,7 @@ export function Card({ product, advertiser, ...rest}: Props) {
       <VStack
         style={{
           transform: [{
-            scale: isPressed && product.is_active ? 0.96 : 1
+            scale: isPressed && (product.is_active !== false) ? 0.96 : 1
           }]
         }}
       >
@@ -68,7 +68,7 @@ export function Card({ product, advertiser, ...rest}: Props) {
               {product.is_new ? "NOVO" : "USADO"}
           </Text>
 
-          { !product.is_active && (
+          { !(product.is_active !== false) && (
             <Box
             position="absolute"
             top="0"
@@ -97,7 +97,7 @@ export function Card({ product, advertiser, ...rest}: Props) {
 
         <Text 
           mt="1"
-          color={product.is_active ? "gray.600" : "gray.400"}
+          color={(product.is_active !== false) ? "gray.600" : "gray.400"}
           fontSize="sm"
           w={170}
           numberOfLines={1}
@@ -105,7 +105,7 @@ export function Card({ product, advertiser, ...rest}: Props) {
           {product.name}
         </Text>
         <Text
-          color={product.is_active ? "gray.700" : "gray.400"}
+          color={(product.is_active !== false) ? "gray.700" : "gray.400"}
           fontFamily="heading"
           fontSize="md"
         >

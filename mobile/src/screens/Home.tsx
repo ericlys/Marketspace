@@ -2,7 +2,7 @@ import { useCallback, useRef, useState } from "react"
 import { Pressable, TouchableOpacity } from "react-native"
 
 import  { BottomSheetModal } from '@gorhom/bottom-sheet'
-import { Box, FlatList, HStack, Heading, Text, VStack, useTheme } from "native-base"
+import { Box, FlatList, HStack, Heading, Text, VStack, useTheme, useToast } from "native-base"
 import { ArrowRight, Tag as TagIcon, X } from "phosphor-react-native"
 
 import { Button } from "@components/Button"
@@ -12,19 +12,36 @@ import { SearchBar } from "@components/SearchBar"
 import { Switch } from "@components/Switch"
 import { UserPhoto } from "@components/UserPhoto"
 import { Tag } from "@components/Tag"
-
 import { useAuth } from "@hooks/useAuth"
 import { api } from "@services/api"
 import userPhotoPng from '@assets/userPhotoDefault.png'
 import { useNavigation } from "@react-navigation/native"
 import { AppNavigatorRoutesProps } from "@routes/app.routes"
 import { SafeAreaView } from "react-native-safe-area-context"
+import { useQuery } from "@tanstack/react-query"
+import { ProductDTO } from "@dtos/ProductDTO"
+import { AppError } from "@utils/AppError"
+import { queryClient } from "../lib/ReactQuery"
+import { Loading } from "@components/Loading"
+import { RefreshControl } from "react-native-gesture-handler"
 
 export function Home(){
   const theme = useTheme()
-  const [checkGroup, setCheckGroup] = useState([])
+  const toast = useToast()
   const bottomSheetRef = useRef<BottomSheetModal>(null)
   const navigation = useNavigation<AppNavigatorRoutesProps>()
+
+  const [filterIsNew, setFilterIsNew] = useState("")
+  const [filterAcceptTrade, setFilterAcceptTrade] = useState(false)
+  const [filterPaymentMethods, setFilterPaymentMethods] = useState<string[]>([])
+  const [filterQuery, setFilterQuery] = useState("")
+
+  function handleResetFilters() {
+    setFilterIsNew("")
+    setFilterAcceptTrade(false)
+    setFilterPaymentMethods([])
+    setFilterQuery("")
+  }
 
   function handleOpenNewCreateAds() {
     navigation.navigate("createAds")
@@ -47,6 +64,53 @@ export function Home(){
   const handleCloseModalPress = useCallback(() => {
     bottomSheetRef.current?.close()
   }, [])
+
+  const { data: advertisements, isLoading, refetch } = useQuery<ProductDTO[]>(['advertisements'],
+  async () => {
+    try {
+      let params = {}
+
+      if (filterIsNew !== "") {
+        params = {...params, is_new: filterIsNew === "new" ? true : false}
+      }
+
+      if (filterAcceptTrade) {
+        params = {...params, accept_trade: filterAcceptTrade}
+      }
+
+      if (filterPaymentMethods.length > 0) {
+        params = {...params, payment_methods: filterPaymentMethods}
+      }
+
+
+      if (filterQuery !== "") {
+        params = { ...params, query: filterQuery }
+      }
+
+      const response = await api.get('/products', {
+        params
+      })
+
+      return response.data
+    } catch (error) {
+      const isAppError = error instanceof AppError
+      const title = isAppError ? error.message : 'Não foi possível carregar os anúncios.'
+
+        toast.show({
+          title,
+          placement: 'top',
+          bgColor: 'red.500'
+        })
+
+        return []
+      }
+    }
+  )
+
+  function handleAppleFilter() {
+    refetch()
+    handleCloseModalPress()
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.gray[200] }} >
@@ -153,27 +217,33 @@ export function Home(){
         <VStack mb={4}>
           <SearchBar 
             placeholder="Buscar anúncio"
+            onSearch={refetch}
             onFilter={handlePresentModalPress}
+            value={filterQuery}
+            onChangeText={(value) => setFilterQuery(value)}
           />
         </VStack>
     
-        {/* <FlatList
-          data={[1,2,3,4,5,6,7]}
-          keyExtractor={(item, index) => index.toString()}
-          numColumns={2}
-          renderItem={({item}) => (
-            <Card condition="new"/>
-          ) }
-          showsVerticalScrollIndicator={false}
-          columnWrapperStyle={{
-            justifyContent: 'space-between',
-            marginBottom: 24
-          }}
-        /> */}
+        { isLoading ? <Loading/> : (
+          <FlatList
+            refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch}/>}
+            data={advertisements}
+            keyExtractor={(item) => item.id!}
+            numColumns={2}
+            renderItem={({item}) => (
+              <Card product={item} advertiser={item.user!}/>
+            ) }
+            showsVerticalScrollIndicator={false}
+            columnWrapperStyle={{
+              justifyContent: 'space-between',
+              marginBottom: 24
+            }}
+          />
+        )}
 
         <BottomSheetModal
           ref={bottomSheetRef}
-          snapPoints={['68%']}
+          snapPoints={['70%']}
           index={0}
           enablePanDownToClose
           handleStyle={{     
@@ -211,8 +281,18 @@ export function Home(){
             </Text>
 
             <HStack space={2} mt={3}>
-              <Tag title="Novo" active />
-              <Tag title="Usado" />
+              <Tag 
+                title="Novo"
+                active={filterIsNew === "new"} 
+                onActivate={() => setFilterIsNew("new")}
+                onDeactivate={() => setFilterIsNew("")}
+              />
+              <Tag 
+                title="Usado" 
+                active={filterIsNew === "used"} 
+                onActivate={() => setFilterIsNew("used")}
+                onDeactivate={() => setFilterIsNew("")}
+              />
             </HStack>
 
             <Text
@@ -223,7 +303,11 @@ export function Home(){
               Aceita troca?
             </Text>
 
-            <Switch mt={3}/>
+            <Switch 
+              mt={3}
+              value={filterAcceptTrade}
+              onToggle={setFilterAcceptTrade}
+            />
 
             <Text
               mt={6}
@@ -235,10 +319,10 @@ export function Home(){
 
             <Group
               mt={3}
-              defaultValue={checkGroup} 
-              value={checkGroup} 
+              defaultValue={filterPaymentMethods} 
+              value={filterPaymentMethods} 
               onChange={(values) => {
-                setCheckGroup(values || [])
+                setFilterPaymentMethods(values || [])
               }}
               accessibilityLabel="pick an item"
             >
@@ -262,12 +346,14 @@ export function Home(){
                 flex={1}
                 title="Resetar filtros"
                 variant="tertiary"
+                onPress={handleResetFilters}
               />
 
               <Button
                 flex={1}
                 title="Aplicar filtros"
                 variant="primary"
+                onPress={handleAppleFilter}
               />
             </HStack>
 

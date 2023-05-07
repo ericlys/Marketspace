@@ -4,10 +4,11 @@ import { MagnifyingGlass, Sliders } from "phosphor-react-native";
 
 type Props = IInputProps & {
   onFilter: () => void
+  onSearch: () => void
 }
 
 
-export function SearchBar({ onFilter, mt=0, mb=0,...rest}: Props) {
+export function SearchBar({ onSearch, onFilter, mt=0, mb=0,...rest}: Props) {
   const theme = useTheme()
 
   return(
@@ -45,6 +46,7 @@ export function SearchBar({ onFilter, mt=0, mb=0,...rest}: Props) {
       {...rest}
     />
     <IconButton
+      onPress={onSearch}
       icon={
         <MagnifyingGlass
           size={20}

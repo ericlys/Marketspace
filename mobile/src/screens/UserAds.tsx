@@ -34,7 +34,7 @@ export function UserAds() {
   }
 
 
-  const { data: products, isLoading } = useQuery<ProductDTO[]>(['myProducts'],
+  const { data: products, isLoading, refetch } = useQuery<ProductDTO[]>(['myProducts'],
     async () => {
       try {
         const response = await api.get('/users/products')
@@ -54,12 +54,8 @@ export function UserAds() {
     }
   )
 
-  const onRefresh = useCallback(() => {
-    queryClient.invalidateQueries(['myProducts'])
-  }, [])
-
   useFocusEffect( useCallback( () => {
-    onRefresh()
+    refetch()
   },[]))
 
   const options = [
@@ -118,7 +114,7 @@ export function UserAds() {
         </HStack>
 
         <FlatList
-          refreshControl={<RefreshControl refreshing={isLoading} onRefresh={onRefresh}/>}
+          refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch}/>}
           data={productsFormatted}
           keyExtractor={(item) => item.id!}
           numColumns={2}

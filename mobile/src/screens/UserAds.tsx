@@ -15,6 +15,7 @@ import { RefreshControl } from "react-native-gesture-handler"
 import { useAuth } from "@hooks/useAuth"
 import { AppNavigatorRoutesProps } from "@routes/app.routes"
 import { SafeAreaView } from "react-native-safe-area-context"
+import { useMyAds } from "@hooks/useMyAds"
 
 export function UserAds() {
   const theme = useTheme()
@@ -24,6 +25,7 @@ export function UserAds() {
   const navigation = useNavigation<AppNavigatorRoutesProps>()
 
   const { user } = useAuth()
+  const { products, isLoading, refetch } = useMyAds()
 
   function handleOpenNewCreateAds() {
     navigation.navigate("createAds")
@@ -32,27 +34,6 @@ export function UserAds() {
   function handleOpenAdDetails(id: string) {
     navigation.navigate("adDetails", {id, isEditable: true})
   }
-
-
-  const { data: products, isLoading, refetch } = useQuery<ProductDTO[]>(['myProducts'],
-    async () => {
-      try {
-        const response = await api.get('/users/products')
-        return response.data
-      } catch (error) {
-        const isAppError = error instanceof AppError
-        const title = isAppError ? error.message : 'Não foi possível carregar os produtos do usuário.'
-
-        toast.show({
-          title,
-          placement: 'top',
-          bgColor: 'red.500'
-        })
-
-        return []
-      }
-    }
-  )
 
   useFocusEffect( useCallback( () => {
     refetch()

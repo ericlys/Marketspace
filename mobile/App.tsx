@@ -10,6 +10,7 @@ import { AuthContextProvider } from '@contexts/AuthContext'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from './src/lib/ReactQuery'
+import { MyAdsContextProvider } from '@contexts/MyAdsContext'
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -29,7 +30,9 @@ export default function App() {
         <GestureHandlerRootView style={{ flex: 1 }}>
           <BottomSheetModalProvider>  
             <AuthContextProvider>
+              <MyAdsContextProvider>
                 {fontsLoaded ? <Routes /> : <Loading/>}
+              </MyAdsContextProvider>
             </AuthContextProvider>
           </BottomSheetModalProvider>
         </GestureHandlerRootView>

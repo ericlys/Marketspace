@@ -21,17 +21,20 @@ import { SafeAreaView } from "react-native-safe-area-context"
 import { useQuery } from "@tanstack/react-query"
 import { ProductDTO } from "@dtos/ProductDTO"
 import { AppError } from "@utils/AppError"
-import { queryClient } from "../lib/ReactQuery"
 import { Loading } from "@components/Loading"
 import { RefreshControl } from "react-native-gesture-handler"
+import { AppTabNavigatorRoutesProps } from "@routes/appTab.routes"
+import { useMyAds } from "@hooks/useMyAds"
 
 export function Home(){
   const theme = useTheme()
   const toast = useToast()
   const bottomSheetRef = useRef<BottomSheetModal>(null)
   const navigation = useNavigation<AppNavigatorRoutesProps>()
+  const tabNavigation = useNavigation<AppTabNavigatorRoutesProps>()
 
   const { user } = useAuth()
+  const { products } = useMyAds()
 
   const [filterIsNew, setFilterIsNew] = useState("")
   const [filterAcceptTrade, setFilterAcceptTrade] = useState(false)
@@ -51,6 +54,10 @@ export function Home(){
 
   function handleOpenAdDetails(id: string) {
     navigation.navigate("adDetails", {id})
+  }
+
+  function handleOpenMeAds() {
+    tabNavigation.navigate("userAds")
   }
 
   const tradeMethods = [
@@ -179,19 +186,19 @@ export function Home(){
                   fontFamily="heading"
                   fontSize="lg"
                 >
-                  4
+                  {products?.length}
                 </Text>
                 <Text
                   fontSize="s"
                   color="gray.600"
                 >
-                  anúncios ativos
+                  { products?.length !== 1 ? "anúncios ativos" : "anúncio ativo"}
                 </Text>
               </VStack>
             </HStack>
             
             <TouchableOpacity     
-              onPress={() => {}}         
+              onPress={handleOpenMeAds}         
             >
               <HStack alignItems="center">
                 <Text

@@ -2,7 +2,7 @@ import { useCallback, useRef, useState } from "react"
 import { Pressable, TouchableOpacity } from "react-native"
 
 import  { BottomSheetModal } from '@gorhom/bottom-sheet'
-import { Box, FlatList, HStack, Heading, Text, VStack, useTheme, useToast } from "native-base"
+import { Box, Center, FlatList, HStack, Heading, Text, VStack, useTheme, useToast } from "native-base"
 import { ArrowRight, Tag as TagIcon, X } from "phosphor-react-native"
 
 import { Button } from "@components/Button"
@@ -31,6 +31,8 @@ export function Home(){
   const bottomSheetRef = useRef<BottomSheetModal>(null)
   const navigation = useNavigation<AppNavigatorRoutesProps>()
 
+  const { user } = useAuth()
+
   const [filterIsNew, setFilterIsNew] = useState("")
   const [filterAcceptTrade, setFilterAcceptTrade] = useState(false)
   const [filterPaymentMethods, setFilterPaymentMethods] = useState<string[]>([])
@@ -47,7 +49,9 @@ export function Home(){
     navigation.navigate("createAds")
   }
 
-  const { user } = useAuth()
+  function handleOpenAdDetails(id: string) {
+    navigation.navigate("adDetails", {id})
+  }
 
   const tradeMethods = [
     {label: 'Boleto', value: 'bank_slip'},
@@ -231,13 +235,25 @@ export function Home(){
             keyExtractor={(item) => item.id!}
             numColumns={2}
             renderItem={({item}) => (
-              <Card product={item} advertiser={item.user!}/>
+              <Card 
+                product={item} 
+                advertiser={item.user!}
+                onPress={() => handleOpenAdDetails(item.id!)}
+              />
             ) }
             showsVerticalScrollIndicator={false}
             columnWrapperStyle={{
               justifyContent: 'space-between',
               marginBottom: 24
             }}
+            ListEmptyComponent={(
+              <Center flex={1}>
+                <Text maxW="70%" fontFamily="heading" color="gray.500" textAlign="center">
+                  Nenhum anúncio encontrado.
+                </Text>
+              </Center>
+            )}
+            contentContainerStyle={advertisements!.length === 0 && {flex: 1, justifyContent: 'center'}}
           />
         )}
 

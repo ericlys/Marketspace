@@ -7,13 +7,16 @@ import { ProductDTO } from '@dtos/ProductDTO'
 
 type AuthRoutes = {
   appTabRoutes: undefined
-  createAds: undefined
+  createAds: {
+    productEditable?: ProductDTO,
+  }
   adDetails: {
     id: string,
     isEditable?: boolean
   }
   adPreview: {
-    product: ProductDTO
+    product: ProductDTO,
+    removedImages: string[]
   }
 }
 

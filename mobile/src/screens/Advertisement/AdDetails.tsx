@@ -17,7 +17,6 @@ type RouteParamsProps = {
   isEditable?: boolean
 }
 
-
 export function AdDetails() {
   const theme = useTheme()
   const toast = useToast()
@@ -56,6 +55,10 @@ export function AdDetails() {
     }
   }
 
+  async function handleEditProductAds() {
+    navigation.navigate("createAds", {productEditable: product})
+  }
+
   useEffect(() => {
     fetchProductDetails()
   },[id])
@@ -70,7 +73,7 @@ export function AdDetails() {
           onBack={handleGoBack} 
           rightIcon={
             <IconButton
-              onPress={() => {}}
+              onPress={handleEditProductAds}
               icon={
                 <PencilSimpleLine
                   size={24}

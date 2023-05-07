@@ -30,7 +30,7 @@ export function AdView({product, user, isEditable=false}: Props) {
   }
 
   const formattedImagesPaths = product.product_images.map( image => 
-    image.path.includes("file:") ?
+    /file|http/.test(image.path) ?
     image.path :
     `${api.getUri()}/images/${image.path}`
   )

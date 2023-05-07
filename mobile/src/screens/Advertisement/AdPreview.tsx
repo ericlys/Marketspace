@@ -1,17 +1,18 @@
-import { Button } from "@components/Button";
-import { Box, Center, HStack, Heading, Modal, Progress, Text, VStack, useTheme, useToast } from "native-base";
-import { AdView } from "./components/AdView";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { ProductDTO } from "@dtos/ProductDTO";
-import { useAuth } from "@hooks/useAuth";
-import { useState } from "react";
-import { api } from "@services/api";
-import { AppError } from "@utils/AppError";
-import { AppNavigatorRoutesProps } from "@routes/app.routes";
+import { Button } from "@components/Button"
+import { Box, Center, HStack, Heading, Modal, Progress, Text, VStack, useTheme, useToast } from "native-base"
+import { AdView } from "./components/AdView"
+import { SafeAreaView } from "react-native-safe-area-context"
+import { useNavigation, useRoute } from "@react-navigation/native"
+import { ProductDTO } from "@dtos/ProductDTO"
+import { useAuth } from "@hooks/useAuth"
+import { useState } from "react"
+import { api } from "@services/api"
+import { AppError } from "@utils/AppError"
+import { AppNavigatorRoutesProps } from "@routes/app.routes"
 
 type RouteParamsProps = {
-  product: ProductDTO
+  product: ProductDTO,
+  removedImages: string[]
 }
 
 export function AdPreview() {
@@ -23,7 +24,8 @@ export function AdPreview() {
   const toast = useToast()
 
   const route = useRoute()
-  const { product } = route.params as RouteParamsProps
+  const { product, removedImages } = route.params as RouteParamsProps
+
 
   const { user } = useAuth()
 
@@ -41,7 +43,7 @@ export function AdPreview() {
       const registerProductForm = new FormData()
       registerProductForm.append('product_id', id)
 
-      product.product_images.map((image, index) => {
+      product.product_images.map((image) => {
         const fileExtension = image.path.split('.').pop()
 
         const imageObject = {
@@ -67,7 +69,7 @@ export function AdPreview() {
       setUploadPercentage(0)
 
       toast.show({
-        title: 'Produto Publicado com sucesso.',
+        title: 'Produto publicado com sucesso.',
         placement: 'top',
         bgColor: 'blue.500'
       })
@@ -78,7 +80,74 @@ export function AdPreview() {
       setUploadPercentage(0)
 
       const isAppError = error instanceof AppError
-      const title = isAppError ? error.message : 'Não foi possível criar a conta. Tente novamente mais tarde.'
+      const title = isAppError ? error.message : 'Não foi possível criar o anúncio. Tente novamente mais tarde.'
+
+      if(isAppError) {
+        toast.show({
+          title,
+          placement: 'top',
+          bgColor: 'red.500'
+        })
+      }
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  async function handleUpdate() {
+    setIsLoading(true)
+
+    try {
+      await api.put(`/products/${product.id}`, product)
+
+      const registerProductForm = new FormData()
+      registerProductForm.append('product_id', product.id!)
+
+      product.product_images.map((image) => {
+        if(!image.id){
+          const fileExtension = image.path.split('.').pop()
+
+          const imageObject = {
+            name: `${product.name}.${fileExtension}`.toLowerCase().replace(/\s/g,''),
+            uri: image.path,
+            type: `image/${fileExtension}`
+          } as any
+
+          registerProductForm.append('images', imageObject)
+        }
+      })
+
+      if(registerProductForm.getAll('images').length > 0) {
+        await api.post('/products/images', registerProductForm, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          },
+          onUploadProgress: progressEvent => {
+            const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total!)
+            setUploadPercentage(percentCompleted)
+          },
+        })
+      }
+
+      setUploadPercentage(0)
+
+      if(removedImages.length > 0) {
+        await api.delete('products/images', { data: {productImagesIds: removedImages}})
+      }
+
+      toast.show({
+        title: 'Anúncio atualizado com sucesso.',
+        placement: 'top',
+        bgColor: 'blue.500'
+      })
+
+      navigation.navigate("appTabRoutes")
+
+    } catch (error) {    
+      setUploadPercentage(0)
+
+      const isAppError = error instanceof AppError
+      const title = isAppError ? error.message : 'Não foi atualizar o anúncio. Tente novamente mais tarde.'
 
       if(isAppError) {
         toast.show({
@@ -136,8 +205,8 @@ export function AdPreview() {
           <Button
             flex={1}
             icon="Tag"
-            title="Publicar"
-            onPress={handlePublish}
+            title={product.id ? "Atualizar" : "Publicar"}
+            onPress={product.id ? handleUpdate : handlePublish}
             isLoading={isLoading}
           />
         </HStack>

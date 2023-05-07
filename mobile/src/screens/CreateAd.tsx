@@ -1,5 +1,5 @@
-import { useState } from "react"
-import { useNavigation } from "@react-navigation/native"
+import { useEffect, useState } from "react"
+import { useNavigation, useRoute } from "@react-navigation/native"
 import { Box, HStack, IconButton, Image, ScrollView, Text, VStack, useTheme, useToast } from "native-base"
 import { Plus, XCircle } from "phosphor-react-native"
 
@@ -19,6 +19,12 @@ import * as ImagePicker from "expo-image-picker"
 import * as FileSystem from 'expo-file-system'
 import { AppNavigatorRoutesProps } from "@routes/app.routes"
 import { SafeAreaView } from "react-native-safe-area-context"
+import { ProductDTO } from "@dtos/ProductDTO"
+import { api } from "@services/api"
+
+type RouteParamsProps = {
+  productEditable?: ProductDTO
+}
 
 type FormDataProps = {
   name: string
@@ -51,8 +57,24 @@ export function CreateAd() {
   const toast = useToast()
   const navigation = useNavigation<AppNavigatorRoutesProps>()
 
-  const [productImages, setProductImages] = useState<{path: string}[]>([])
+  const route = useRoute()
+  const params = route.params as RouteParamsProps
+  const product = params?.productEditable
+
+  const [productImages, setProductImages] = useState<{path: string, id?: string}[]>([])
+  const [imagesUploadedRemoved, setImagesUploadedRemoved] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    if (product && productImages.length === 0) {
+      const formattedImagesPaths = product.product_images.map( image => 
+      image.path.includes("file:") ?
+      image : { path: `${api.getUri()}/images/${image.path}`, id: image.id }
+      )
+
+      setProductImages(formattedImagesPaths)
+    }
+  }, [product])
 
   function handleGoBack() {
     navigation.goBack()
@@ -69,9 +91,12 @@ export function CreateAd() {
   const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
     resolver: yupResolver(createAdSchema),
     defaultValues: {
-      is_new: 'new',
-      accept_trade: false,
-      payment_methods: []
+      name: product?.name ?? '',
+      description: product?.description ?? '',
+      is_new: product?.is_new ? 'new' : 'used',
+      price: product ? formatCurrency(product?.price.toString()) : '',
+      accept_trade: product?.accept_trade ?? false,
+      payment_methods: product?.payment_methods ?? [],
     }
   })
 
@@ -122,6 +147,11 @@ export function CreateAd() {
 
   function handleRemoveProductImage(index: number) {
     const newListOfImages = [...productImages]
+    
+    if(newListOfImages[index]?.id){
+      setImagesUploadedRemoved([...imagesUploadedRemoved, newListOfImages[index].id!])
+    }
+
     newListOfImages.splice(index, 1)
     setProductImages(newListOfImages)
   }
@@ -139,7 +169,8 @@ export function CreateAd() {
       })     
     }
 
-    const product = {
+    const dataFormatted = {
+      id: product?.id,
       name: data.name,
       description: data.description,
       is_new: data.is_new === 'new',
@@ -151,7 +182,7 @@ export function CreateAd() {
     }
 
 
-    navigation.navigate("adPreview", { product })
+    navigation.navigate("adPreview", { product: dataFormatted, removedImages: imagesUploadedRemoved  })
 
     setIsLoading(false)
   }
@@ -163,7 +194,7 @@ export function CreateAd() {
         pt={4}
         bg="gray.200"
         onBack={handleGoBack}
-        title="Criar anúncio"
+        title={product ? "Editar anúncio" : "Criar anúncio"}
       />
     <ScrollView 
       bg="gray.200" 

@@ -12,6 +12,7 @@ import { api } from "@services/api";
 import { AppError } from "@utils/AppError";
 import { Loading } from "@components/Loading";
 import { Linking } from "react-native";
+import { formatCurrency } from "@utils/formatters";
 
 type RouteParamsProps = {
   id: string,
@@ -120,7 +121,7 @@ export function AdDetails() {
             R$
           </Text>
           <Text color="blue.500" fontSize="xl" fontFamily="heading">
-            213,00
+            {product.price && formatCurrency(product.price.toString())}
           </Text>
         </HStack>
 

@@ -14,7 +14,7 @@ E várias outras.
 
 **Server:** Express, Dayjs, Jsonwebtoken, Prisma, Multer, TypeScript e Swagger;
 **App:** Expo, React Native, Native Base, React Navigation,
- Axios.
+ Axios, React Query, Yup, React-Hook-Form.
 
 [x] O usuário só pode visualizar, editar e apagar as refeições que ele criou.
 ## Variáveis de ambiente
